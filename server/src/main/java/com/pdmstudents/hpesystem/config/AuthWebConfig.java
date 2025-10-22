@@ -1,6 +1,5 @@
 package com.pdmstudents.hpesystem.config;
 
-import com.pdmstudents.hpesystem.interceptor.AuthInterceptor;
 import com.pdmstudents.hpesystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

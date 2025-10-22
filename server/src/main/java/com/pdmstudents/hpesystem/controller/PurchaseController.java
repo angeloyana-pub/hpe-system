@@ -52,6 +52,7 @@ public class PurchaseController {
           .ifPresent(
               part -> {
                 purchase.setPart(part);
+                part.setStock(part.getStock() + purchase.getQuantity());
               });
     }
     Purchase savedPurchase = repo.save(purchase);
@@ -66,6 +67,9 @@ public class PurchaseController {
             purchase -> {
               if (updatedPurchase.getQuantity() != null) {
                 purchase.setQuantity(updatedPurchase.getQuantity());
+              }
+              if (updatedPurchase.getPrice() != null) {
+                purchase.setPrice(updatedPurchase.getPrice());
               }
               if (updatedPurchase.getSupplier() != null) {
                 supplierRepo

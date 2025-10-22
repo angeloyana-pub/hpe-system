@@ -1,6 +1,7 @@
 package com.pdmstudents.hpesystem.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "purchases")
@@ -10,6 +11,9 @@ public class Purchase {
   private Long id;
 
   private Integer quantity;
+
+  @Column(precision = 10, scale = 2)
+  private BigDecimal price;
 
   @ManyToOne
   @JoinColumn(name = "supplier_id")
@@ -33,6 +37,14 @@ public class Purchase {
 
   public void setQuantity(Integer quantity) {
     this.quantity = quantity;
+  }
+
+  public BigDecimal getPrice() {
+    return price;
+  }
+
+  public void setPrice(BigDecimal price) {
+    this.price = price;
   }
 
   public Supplier getSupplier() {

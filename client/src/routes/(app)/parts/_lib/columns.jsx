@@ -1,0 +1,88 @@
+import { MoreHorizontal } from 'lucide-react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { formatCurrency } from '@/lib/utils';
+
+export function getColumns({ setRowAction }) {
+  return [
+    {
+      accessorKey: 'id',
+      header: 'Part ID',
+    },
+    {
+      accessorKey: 'name',
+      header: 'Name',
+    },
+    {
+      accessorKey: 'size',
+      header: 'Size',
+    },
+    {
+      accessorKey: 'stock',
+      header: 'Stock',
+      cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
+    },
+    {
+      accessorKey: 'price',
+      header: 'Price',
+      cell: ({ getValue }) => (
+        <div className="text-right font-medium">{formatCurrency(getValue())}</div>
+      ),
+    },
+    {
+      accessorKey: 'tags',
+      header: 'Tags',
+      cell: ({ getValue }) => {
+        const tags = getValue();
+        if (tags.length <= 0) {
+          return <div className="text-muted-foreground italic">N/A</div>;
+        }
+
+        return (
+          <div className="flex gap-2">
+            {tags.map((tag) => (
+              <Badge key={tag.id} variant="outline">
+                {tag.name}
+              </Badge>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const handleEdit = () => {
+          setRowAction({ row, variant: 'update' });
+        };
+
+        const handleDelete = () => {
+          setRowAction({ row, variant: 'delete' });
+        };
+
+        return (
+          <div className="flex justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="data-[state=open]:bg-accent">
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+    },
+  ];
+}

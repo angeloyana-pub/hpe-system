@@ -13,6 +13,7 @@ public class Part {
 
   private String name;
   private String size;
+  private Integer stock;
 
   @Column(precision = 10, scale = 2)
   private BigDecimal price;
@@ -46,6 +47,14 @@ public class Part {
 
   public void setSize(String size) {
     this.size = size;
+  }
+
+  public Integer getStock() {
+    return stock;
+  }
+
+  public void setStock(Integer stock) {
+    this.stock = stock;
   }
 
   public BigDecimal getPrice() {

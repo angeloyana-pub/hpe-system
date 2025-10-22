@@ -50,6 +50,9 @@ public class PartController {
               if (updatedPart.getSize() != null) {
                 part.setSize(updatedPart.getSize());
               }
+              if (updatedPart.getStock() != null) {
+                part.setStock(updatedPart.getStock());
+              }
               if (updatedPart.getPrice() != null) {
                 part.setPrice(updatedPart.getPrice());
               }
