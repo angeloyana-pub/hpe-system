@@ -14,7 +14,7 @@ export function PartsList() {
   const { addToCart, getCartItem, setQuantity } = useCart();
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 @sm:grid-cols-2 @lg:grid-cols-3">
       {parts.map((part) => {
         const cartItem = getCartItem(part.id);
 
@@ -23,7 +23,7 @@ export function PartsList() {
             <CardHeader>
               <Skeleton className="aspect-square w-full" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <div className="font-medium">{part.name}</div>
               <div className="text-muted-foreground text-sm">{formatCurrency(part.price)}</div>
             </CardContent>
