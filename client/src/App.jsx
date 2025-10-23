@@ -8,6 +8,7 @@ import PointOfSale from './routes/(app)/point-of-sale/page';
 import Purchases from './routes/(app)/purchases/page';
 import Suppliers from './routes/(app)/suppliers/page';
 import Tags from './routes/(app)/tags/page';
+import Login from './routes/(auth)/login/page';
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route element={<AppLayout />}>
             <Route path="/parts" element={<Parts />} />
             <Route path="/tags" element={<Tags />} />
