@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { DataTable } from '@/components/custom/data-table';
+import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { useDeletePart, useParts } from '@/hooks/use-parts';
 
 import { AddPartDialog } from './_components/add-part-dialog';
@@ -20,17 +21,23 @@ function Parts() {
   }, [rowAction]);
 
   return (
-    <div className="p-4 space-y-4">
-      <div className="flex">
-        <AddPartDialog />
+    <SidebarInset>
+      <header className="p-4 sticky h-14 top-0 flex items-center z-2 bg-background border-b gap-2">
+        <SidebarTrigger />
+        Parts
+      </header>
+      <div className="p-4 space-y-4">
+        <div className="flex">
+          <AddPartDialog />
+        </div>
+        <DataTable data={data} columns={columns} />
+        <UpdatePartDialog
+          open={rowAction?.variant === 'update'}
+          onOpenChange={() => setRowAction(null)}
+          part={rowAction?.row.original ?? null}
+        />
       </div>
-      <DataTable data={data} columns={columns} />
-      <UpdatePartDialog
-        open={rowAction?.variant === 'update'}
-        onOpenChange={() => setRowAction(null)}
-        part={rowAction?.row.original ?? null}
-      />
-    </div>
+    </SidebarInset>
   );
 }
 
