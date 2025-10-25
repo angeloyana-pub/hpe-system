@@ -1,10 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { addPurchase, deletePurchase, getPurchases, updatePurchase } from '@/api/purchase';
 
+import { useAuthenticatedMutation } from './use-authenticated-mutation';
+import { useAuthenticatedQuery } from './use-authenticated-query';
+
 export function usePurchases(opts) {
-  return useQuery({
+  return useAuthenticatedQuery({
     queryKey: ['purchases'],
     queryFn: getPurchases,
     ...opts,
@@ -14,7 +16,7 @@ export function usePurchases(opts) {
 export function useAddPurchase(opts) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useAuthenticatedMutation({
     mutationFn: addPurchase,
     onSuccess: () => {
       queryClient.invalidateQueries(['purchases']);
@@ -26,7 +28,7 @@ export function useAddPurchase(opts) {
 export function useUpdatePurchase(opts) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useAuthenticatedMutation({
     mutationFn: updatePurchase,
     onSuccess: () => {
       queryClient.invalidateQueries(['purchases']);
@@ -38,7 +40,7 @@ export function useUpdatePurchase(opts) {
 export function useDeletePurchase(opts) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useAuthenticatedMutation({
     mutationFn: deletePurchase,
     onSuccess: () => {
       queryClient.invalidateQueries(['purchases']);

@@ -1,6 +1,8 @@
 import { ChevronDown, LogOut } from 'lucide-react';
 import { Link } from 'react-router';
+import { toast } from 'sonner';
 
+import { useAuth } from '@/auth/context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Sidebar,
@@ -17,6 +19,13 @@ import {
 import { routes } from '../_lib/routes';
 
 export function AppSidebar() {
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success('Successfully logged out');
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -54,7 +63,7 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
+            <SidebarMenuButton onClick={handleLogout}>
               <LogOut />
               Log Out
             </SidebarMenuButton>

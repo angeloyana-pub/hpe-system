@@ -1,10 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { addTag, deleteTag, getTags, updateTag } from '@/api/tag';
 
+import { useAuthenticatedMutation } from './use-authenticated-mutation';
+import { useAuthenticatedQuery } from './use-authenticated-query';
+
 export function useTags(opts) {
-  return useQuery({
+  return useAuthenticatedQuery({
     queryKey: ['tags'],
     queryFn: getTags,
     ...opts,
@@ -14,7 +16,7 @@ export function useTags(opts) {
 export function useAddTag(opts) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useAuthenticatedMutation({
     mutationFn: addTag,
     onSuccess: () => {
       queryClient.invalidateQueries(['tags']);
@@ -26,7 +28,7 @@ export function useAddTag(opts) {
 export function useUpdateTag(opts) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useAuthenticatedMutation({
     mutationFn: updateTag,
     onSuccess: () => {
       queryClient.invalidateQueries(['tags']);
@@ -38,7 +40,7 @@ export function useUpdateTag(opts) {
 export function useDeleteTag(opts) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useAuthenticatedMutation({
     mutationFn: deleteTag,
     onSuccess: () => {
       queryClient.invalidateQueries(['tags']);

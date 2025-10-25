@@ -20,13 +20,6 @@ public class AuthController {
     this.userRepo = userRepo;
   }
 
-  @PostMapping("/register")
-  public ApiResponse<Object> register(@RequestBody User user) {
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-    userRepo.save(user);
-    return new ApiResponse<>(true, null);
-  }
-
   @PostMapping("/login")
   public ResponseEntity<ApiResponse<Object>> login(
       @RequestBody User loginUser, HttpSession session) {
@@ -38,6 +31,12 @@ public class AuthController {
     }
 
     return ResponseEntity.badRequest().body(new ApiResponse<>(false, null));
+  }
+
+  @PostMapping("/logout")
+  public ApiResponse<Object> logout(HttpSession session) {
+    session.removeAttribute("userId");
+    return new ApiResponse<>(true, null);
   }
 
   @GetMapping("/me")

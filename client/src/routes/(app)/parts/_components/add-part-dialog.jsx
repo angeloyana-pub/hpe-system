@@ -43,6 +43,9 @@ export function AddPartDialog() {
 
   const form = useForm({
     resolver: zodResolver(addPartSchema),
+    defaultValues: {
+      tags: [],
+    },
   });
 
   const handleSubmit = (data) => {

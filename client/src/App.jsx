@@ -1,6 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
+import { Toaster } from '@/components/ui/sonner';
+
+import { AuthProvider } from './auth/context';
+import { ProtectedRoute } from './auth/protected-route';
 import AppLayout from './routes/(app)/layout';
 import Orders from './routes/(app)/orders/page';
 import Parts from './routes/(app)/parts/page';
@@ -14,21 +18,28 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route element={<AppLayout />}>
-            <Route path="/parts" element={<Parts />} />
-            <Route path="/tags" element={<Tags />} />
-            <Route path="/suppliers" element={<Suppliers />} />
-            <Route path="/purchases" element={<Purchases />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/point-of-sale" element={<PointOfSale />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <>
+      <Toaster />
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<AppLayout />}>
+                  <Route path="/parts" element={<Parts />} />
+                  <Route path="/tags" element={<Tags />} />
+                  <Route path="/suppliers" element={<Suppliers />} />
+                  <Route path="/purchases" element={<Purchases />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/point-of-sale" element={<PointOfSale />} />
+                </Route>
+              </Route>
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </>
   );
 }
 

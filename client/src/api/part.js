@@ -1,6 +1,7 @@
 import { client } from './client';
 
 export async function getParts() {
+  // throw new Error('test')
   const res = await client.get('/parts');
   return res.data.data;
 }

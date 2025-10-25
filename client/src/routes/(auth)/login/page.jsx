@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { Loader } from 'lucide-react';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { useAuth } from '@/auth/context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -19,6 +21,7 @@ import { loginSchema } from './_lib/validators';
 
 function Login() {
   const [isLoginPending, startLoginTransition] = useTransition();
+  const { login } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -26,13 +29,27 @@ function Login() {
 
   const handleSubmit = (data) => {
     startLoginTransition(async () => {
-      // TODO: login logic here
-      console.log(data);
+      try {
+        await login(data, { redirectTo: '/parts' }); // TODO: redirect to dashboard
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.response?.status === 400) {
+          form.setError('username', {
+            type: 'manual',
+            message: 'Incorrect username or password',
+          });
+          form.setError('password', {
+            type: 'manual',
+            message: 'Incorrect username or password',
+          });
+        } else {
+          throw err;
+        }
+      }
     });
   };
 
   return (
-    <div className="h-svh flex items-center justify-center">
+    <div className="h-svh p-4 flex items-center justify-center">
       <Card className="w-full sm:w-[300px]">
         <CardHeader className="justify-center text-center">
           <CardTitle>Welcome!</CardTitle>
@@ -48,7 +65,7 @@ function Login() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="Username" {...field} />
+                      <Input placeholder="Username" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -61,7 +78,12 @@ function Login() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="Password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
