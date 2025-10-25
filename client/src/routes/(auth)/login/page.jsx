@@ -30,7 +30,7 @@ function Login() {
   const handleSubmit = (data) => {
     startLoginTransition(async () => {
       try {
-        await login(data, { redirectTo: '/parts' }); // TODO: redirect to dashboard
+        await login(data, { redirectTo: '/dashboard' });
       } catch (err) {
         if (axios.isAxiosError(err) && err.response?.status === 400) {
           form.setError('username', {

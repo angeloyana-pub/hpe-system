@@ -1,6 +1,19 @@
-import { Calculator, Component, ShoppingCart, Tags, Truck, Warehouse } from 'lucide-react';
+import {
+  Calculator,
+  Component,
+  LayoutDashboard,
+  ShoppingCart,
+  Tags,
+  Truck,
+  Warehouse,
+} from 'lucide-react';
 
 export const routes = [
+  {
+    title: 'Dashboard',
+    path: '/dashboard',
+    icon: LayoutDashboard,
+  },
   {
     title: 'Parts',
     path: '/parts',

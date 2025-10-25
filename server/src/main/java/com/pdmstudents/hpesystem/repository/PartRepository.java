@@ -1,6 +1,7 @@
 package com.pdmstudents.hpesystem.repository;
 
 import com.pdmstudents.hpesystem.model.Part;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,4 +11,7 @@ public interface PartRepository extends JpaRepository<Part, Long> {
   @Modifying
   @Query("UPDATE Part p SET p.stock = p.stock - :stock WHERE p.id = :id")
   int decreaseStock(@Param("id") Long id, @Param("stock") Integer stock);
+
+  @Query("SELECT p from Part p WHERE p.stock < :stock ORDER BY p.stock ASC")
+  List<Part> getLowStockParts(@Param("stock") Integer stock);
 }
