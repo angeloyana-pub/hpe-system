@@ -18,7 +18,7 @@ public class CreateUser implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    if (args.length > 0 && !"create-user".equals(args[0])) return;
+    if (args.length == 0 || !"create-user".equals(args[0])) return;
     Scanner scanner = new Scanner(System.in);
 
     System.out.println("\nCreate User");
