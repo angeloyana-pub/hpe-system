@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { paymentMethods } from '@/data/payment-methods';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatDate } from '@/lib/utils';
 
 export function getColumns() {
   return [
@@ -22,6 +22,11 @@ export function getColumns() {
         const paymentMethod = paymentMethods.find((pm) => pm.value === getValue());
         return <Badge variant="outline">{paymentMethod?.label}</Badge>;
       },
+    },
+    {
+      accessorKey: 'createdAt',
+      header: 'Created At',
+      cell: ({ getValue }) => formatDate(getValue()),
     },
   ];
 }

@@ -2,6 +2,7 @@ package com.pdmstudents.hpesystem.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "purchases")
@@ -15,6 +16,8 @@ public class Purchase {
   @Column(precision = 10, scale = 2)
   private BigDecimal price;
 
+  private LocalDateTime createdAt;
+
   @ManyToOne
   @JoinColumn(name = "supplier_id")
   private Supplier supplier;
@@ -22,6 +25,11 @@ public class Purchase {
   @ManyToOne
   @JoinColumn(name = "part_id")
   private Part part;
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = LocalDateTime.now();
+  }
 
   public Long getId() {
     return id;
@@ -45,6 +53,14 @@ public class Purchase {
 
   public void setPrice(BigDecimal price) {
     this.price = price;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
   }
 
   public Supplier getSupplier() {

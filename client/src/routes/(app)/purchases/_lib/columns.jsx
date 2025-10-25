@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatDate } from '@/lib/utils';
 
 export function getColumns({ setRowAction }) {
   return [
@@ -30,6 +30,11 @@ export function getColumns({ setRowAction }) {
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),
+    },
+    {
+      accessorKey: 'createdAt',
+      header: 'Created At',
+      cell: ({ getValue }) => formatDate(getValue()),
     },
     {
       accessorKey: 'supplier.name',

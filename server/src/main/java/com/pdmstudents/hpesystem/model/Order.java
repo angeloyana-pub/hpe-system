@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,8 +20,15 @@ public class Order {
 
   private String paymentMethod;
 
+  private LocalDateTime createdAt;
+
   @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
   private List<OrderItem> orderItems;
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = LocalDateTime.now();
+  }
 
   public Long getId() {
     return id;
@@ -44,6 +52,14 @@ public class Order {
 
   public void setPaymentMethod(String paymentMethod) {
     this.paymentMethod = paymentMethod;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
   }
 
   public List<OrderItem> getOrderItems() {
