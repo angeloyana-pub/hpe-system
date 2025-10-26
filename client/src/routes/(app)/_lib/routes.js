@@ -2,6 +2,7 @@ import {
   Calculator,
   Component,
   LayoutDashboard,
+  LineChart,
   ShoppingCart,
   Tags,
   Truck,
@@ -43,5 +44,10 @@ export const routes = [
     title: 'Point of Sale',
     path: '/point-of-sale',
     icon: Calculator,
+  },
+  {
+    title: 'Reports',
+    path: '/reports',
+    icon: LineChart,
   },
 ];
