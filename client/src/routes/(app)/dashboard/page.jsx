@@ -11,18 +11,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useLowStockParts, useTotalRevenue, useTotalSales } from '@/hooks/use-dashboard';
+import { useLowStockParts, useTotalOrders, useTotalSales } from '@/hooks/use-dashboard';
 import { formatCurrency } from '@/lib/utils';
 
 function Dashboard() {
-  const { data: totalRevenue } = useTotalRevenue({
-    initialData: {
-      totalRevenue: 0,
-    },
-  });
   const { data: totalSales } = useTotalSales({
     initialData: {
       totalSales: 0,
+    },
+  });
+  const { data: totalOrders } = useTotalOrders({
+    initialData: {
+      totalOrders: 0,
     },
   });
   const { data: lowStockParts } = useLowStockParts({ initialData: [] });
@@ -37,22 +37,20 @@ function Dashboard() {
         <div className="grid gap-4 @sm:grid-cols-2">
           <Card className="gap-0">
             <CardHeader className="flex justify-between">
-              <CardTitle>Total Revenue</CardTitle>
+              <CardTitle>Total Sales</CardTitle>
               <PhilippinePeso />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-medium">
-                {formatCurrency(totalRevenue.totalRevenue)}
-              </div>
+              <div className="text-3xl font-medium">{formatCurrency(totalSales.totalSales)}</div>
             </CardContent>
           </Card>
           <Card className="gap-0">
             <CardHeader className="flex justify-between">
-              <CardTitle>Sales</CardTitle>
+              <CardTitle>Total Orders</CardTitle>
               <ShoppingCart />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-medium">+{totalSales.totalSales}</div>
+              <div className="text-3xl font-medium">+{totalOrders.totalOrders}</div>
             </CardContent>
           </Card>
         </div>

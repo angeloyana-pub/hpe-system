@@ -7,8 +7,5 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
   @Query("SELECT COALESCE(SUM(oi.quantity * oi.price), 0) FROM OrderItem oi")
-  BigDecimal getTotalRevenue();
-
-  @Query("SELECT COALESCE(SUM(oi.quantity), 0) FROM OrderItem oi")
-  int getTotalSales();
+  BigDecimal getTotalSales();
 }

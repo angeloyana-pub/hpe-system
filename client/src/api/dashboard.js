@@ -5,12 +5,12 @@ export async function getLowStockParts() {
   return res.data.data;
 }
 
-export async function getTotalRevenue() {
-  const res = await client.get('/dashboard/total-revenue');
+export async function getTotalSales() {
+  const res = await client.get('/dashboard/total-sales');
   return res.data.data;
 }
 
-export async function getTotalSales() {
-  const res = await client.get('/dashboard/total-sales');
+export async function getTotalOrders() {
+  const res = await client.get('/dashboard/total-orders');
   return res.data.data;
 }
