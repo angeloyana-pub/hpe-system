@@ -2,61 +2,40 @@ package com.pdmstudents.hpesystem.controller;
 
 import com.pdmstudents.hpesystem.dto.ApiResponse;
 import com.pdmstudents.hpesystem.model.Tag;
-import com.pdmstudents.hpesystem.repository.TagRepository;
+import com.pdmstudents.hpesystem.service.TagService;
 import java.util.List;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/tags")
 public class TagController {
-  private final TagRepository repo;
+  private final TagService service;
 
-  public TagController(TagRepository repo) {
-    this.repo = repo;
+  public TagController(TagService service) {
+    this.service = service;
   }
 
   @GetMapping
   public ApiResponse<List<Tag>> getTags() {
-    return new ApiResponse<>(true, repo.findAll());
-  }
-
-  public ResponseEntity<ApiResponse<Tag>> getTag(@PathVariable Long id) {
-    return repo.findById(id)
-        .map(tag -> ResponseEntity.ok(new ApiResponse<>(true, tag)))
-        .orElseGet(
-            () -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null)));
+    List<Tag> tags = service.getTags();
+    return new ApiResponse<>(200, tags);
   }
 
   @PostMapping
   public ApiResponse<Tag> createTag(@RequestBody Tag tag) {
-    return new ApiResponse<>(true, repo.save(tag));
+    Tag savedTag = service.createTag(tag);
+    return new ApiResponse<>(200, savedTag);
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<ApiResponse<Tag>> updateTag(
-      @PathVariable Long id, @RequestBody Tag updatedTag) {
-    return repo.findById(id)
-        .map(
-            tag -> {
-              if (updatedTag.getName() != null) {
-                tag.setName(updatedTag.getName());
-              }
-              Tag savedTag = repo.save(tag);
-              return ResponseEntity.ok(new ApiResponse<>(true, savedTag));
-            })
-        .orElseGet(
-            () -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null)));
+  public ApiResponse<Tag> updateTag(@PathVariable Long id, @RequestBody Tag updatedTag) {
+    Tag tag = service.updateTag(id, updatedTag);
+    return new ApiResponse<>(200, tag);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Object>> deleteTag(@PathVariable Long id) {
-    if (repo.existsById(id)) {
-      repo.deleteById(id);
-      return ResponseEntity.ok(new ApiResponse<>(true, null));
-    } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null));
-    }
+  public ApiResponse<Object> deleteTag(@PathVariable Long id) {
+    service.deleteTag(id);
+    return new ApiResponse<>(200, null);
   }
 }

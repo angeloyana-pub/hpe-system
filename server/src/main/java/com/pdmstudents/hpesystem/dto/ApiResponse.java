@@ -1,20 +1,20 @@
 package com.pdmstudents.hpesystem.dto;
 
 public class ApiResponse<T> {
-  private boolean success;
+  private int status;
   private T data;
 
-  public ApiResponse(boolean success, T data) {
-    this.success = success;
+  public ApiResponse(int status, T data) {
+    this.status = status;
     this.data = data;
   }
 
-  public boolean getSuccess() {
-    return success;
+  public int getStatus() {
+    return status;
   }
 
-  public void setSuccess(boolean success) {
-    this.success = success;
+  public void setStatus(int status) {
+    this.status = status;
   }
 
   public T getData() {

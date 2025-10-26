@@ -1,23 +1,21 @@
 package com.pdmstudents.hpesystem.interceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pdmstudents.hpesystem.dto.ApiResponse;
-import com.pdmstudents.hpesystem.model.User;
-import com.pdmstudents.hpesystem.repository.UserRepository;
+import com.pdmstudents.hpesystem.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.Optional;
 import java.util.Set;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
-  private final UserRepository userRepo;
+  private final AuthService service;
 
-  public AuthInterceptor(UserRepository userRepo) {
-    this.userRepo = userRepo;
+  public AuthInterceptor(AuthService service) {
+    this.service = service;
   }
 
   @Override
@@ -26,26 +24,22 @@ public class AuthInterceptor implements HandlerInterceptor {
     if (!Set.of("GET", "POST", "PUT", "PATCH", "DELETE").contains(request.getMethod())) return true;
     HttpSession session = request.getSession();
 
-    ObjectMapper mapper = new ObjectMapper();
-    response.setContentType("application/json");
-    response.setCharacterEncoding("UTF-8");
-
     Long userId = (Long) session.getAttribute("userId");
     if (userId == null) {
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getWriter().write(mapper.writeValueAsString(new ApiResponse(false, null)));
-      return false;
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
 
-    Optional<User> user = userRepo.findById(userId);
-    if (user.get() == null) {
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      session.removeAttribute("userId");
-      response.getWriter().write(mapper.writeValueAsString(new ApiResponse(false, null)));
-      return false;
-    }
-
-    request.setAttribute("user", user.get());
-    return true;
+    return service
+        .getUser(userId)
+        .map(
+            user -> {
+              request.setAttribute("user", user);
+              return true;
+            })
+        .orElseThrow(
+            () -> {
+              session.removeAttribute("userId");
+              return new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            });
   }
 }

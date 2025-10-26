@@ -2,55 +2,35 @@ package com.pdmstudents.hpesystem.controller;
 
 import com.pdmstudents.hpesystem.dto.ApiResponse;
 import com.pdmstudents.hpesystem.model.User;
-import com.pdmstudents.hpesystem.repository.UserRepository;
+import com.pdmstudents.hpesystem.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.util.Optional;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-  private final UserRepository userRepo;
-  private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  private final AuthService service;
 
-  public AuthController(UserRepository userRepo) {
-    this.userRepo = userRepo;
+  public AuthController(AuthService service) {
+    this.service = service;
   }
 
   @PostMapping("/login")
-  public ResponseEntity<ApiResponse<Object>> login(
-      @RequestBody User loginUser, HttpSession session) {
-    Optional<User> user = userRepo.findByUsername(loginUser.getUsername());
-    if (user.isPresent()
-        && passwordEncoder.matches(loginUser.getPassword(), user.get().getPassword())) {
-      session.setAttribute("userId", user.get().getId());
-      return ResponseEntity.ok(new ApiResponse<>(true, null));
-    }
-
-    return ResponseEntity.badRequest().body(new ApiResponse<>(false, null));
+  public ApiResponse<Object> login(@RequestBody User loginUser, HttpSession session) {
+    User user = service.login(loginUser.getUsername(), loginUser.getPassword());
+    session.setAttribute("userId", user.getId());
+    return new ApiResponse<>(200, null);
   }
 
   @PostMapping("/logout")
   public ApiResponse<Object> logout(HttpSession session) {
     session.removeAttribute("userId");
-    return new ApiResponse<>(true, null);
+    return new ApiResponse<>(200, null);
   }
 
   @GetMapping("/me")
-  public ResponseEntity<ApiResponse<User>> me(HttpSession session) {
-    Long userId = (Long) session.getAttribute("userId");
-    if (userId == null)
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>(false, null));
-
-    Optional<User> user = userRepo.findById(userId);
-    if (!user.isPresent()) {
-      session.removeAttribute("userId");
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>(false, null));
-    }
-
-    return ResponseEntity.ok(new ApiResponse<>(true, user.get()));
+  public ApiResponse<User> me(HttpServletRequest request) {
+    return new ApiResponse<>(200, (User) request.getAttribute("user"));
   }
 }
