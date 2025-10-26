@@ -20,12 +20,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useUpdateSupplier } from '@/hooks/use-suppliers';
+import { useUpdateSupplier } from '@/features/suppliers/mutations';
 
 import { updateSupplierSchema } from '../_lib/validators';
 
 export function UpdateSupplierDialog({ supplier, ...props }) {
-  const updateSupplierMutation = useUpdateSupplier();
+  const updateSupplier = useUpdateSupplier();
 
   const [isUpdatePending, startUpdateTransition] = useTransition();
 
@@ -42,7 +42,7 @@ export function UpdateSupplierDialog({ supplier, ...props }) {
   const handleSubmit = (data) => {
     startUpdateTransition(async () => {
       if (!supplier) return;
-      await updateSupplierMutation.mutateAsync({
+      await updateSupplier.mutateAsync({
         id: supplier.id,
         updatedSupplier: data,
       });
@@ -75,7 +75,7 @@ export function UpdateSupplierDialog({ supplier, ...props }) {
             <DialogFooter>
               <Button type="submit" disabled={isUpdatePending}>
                 {isUpdatePending && <Loader aria-hidden="true" className="animate-spin" />}
-                Save
+                Update
               </Button>
             </DialogFooter>
           </form>

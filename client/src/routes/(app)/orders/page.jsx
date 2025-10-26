@@ -4,12 +4,12 @@ import { Link } from 'react-router';
 import { DataTable } from '@/components/custom/data-table';
 import { buttonVariants } from '@/components/ui/button';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { useOrders } from '@/hooks/use-orders';
+import { useOrders } from '@/features/orders/queries';
 
 import { getColumns } from './_lib/columns';
 
 function Orders() {
-  const { data } = useOrders({ initialData: [] });
+  const { data } = useOrders();
   const columns = getColumns();
 
   return (

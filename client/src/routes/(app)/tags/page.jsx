@@ -2,22 +2,23 @@ import { useEffect, useState } from 'react';
 
 import { DataTable } from '@/components/custom/data-table';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { useDeleteTag, useTags } from '@/hooks/use-tags';
+import { useDeleteTag } from '@/features/tags/mutations';
+import { useTags } from '@/features/tags/queries';
 
 import { AddTagDialog } from './_components/add-tag-dialog';
 import { UpdateTagDialog } from './_components/update-tag-dialog';
 import { getColumns } from './_lib/columns';
 
 function Tags() {
-  const deleteTagMutation = useDeleteTag();
-  const { data } = useTags({ initialData: [] });
+  const deleteTag = useDeleteTag();
+  const { data } = useTags();
 
   const [rowAction, setRowAction] = useState(null);
   const columns = getColumns({ setRowAction });
 
   useEffect(() => {
     if (rowAction === null || rowAction.variant != 'delete') return;
-    deleteTagMutation.mutate(rowAction.row.original.id);
+    deleteTag.mutate(rowAction.row.original.id);
   }, [rowAction]);
 
   return (

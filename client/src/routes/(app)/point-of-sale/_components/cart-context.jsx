@@ -1,21 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 
-// export type CartItem = {
-//   id: number;
-//   part: ProductAsOption;
-//   quantity: number;
-// };
-
-// type CartContextType = {
-//   cart: CartItem[];
-//   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
-//   total: number;
-//   addToCart: (part) => void;
-//   getCartItem: (cartItemId: number) => CartItem | null;
-//   setQuantity: (cartItemId: number, quantity: number) => void;
-//   clearCart: () => void;
-// };
-
 const CartContext = createContext(null);
 
 export function useCart() {

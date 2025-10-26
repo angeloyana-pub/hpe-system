@@ -1,4 +1,4 @@
-import { client } from './client';
+import { client } from '@/api/client';
 
 export async function getSalesReport() {
   const res = await client.get('/reports/sales');

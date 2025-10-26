@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { getCurrentUser, login, logout } from '@/api/auth';
+import { getCurrentUser, login, logout } from './service';
 
 const AuthContext = createContext(null);
 

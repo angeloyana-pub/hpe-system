@@ -1,4 +1,4 @@
-import { client } from './client';
+import { client } from '@/api/client';
 
 export async function getLowStockParts() {
   const res = await client.get('/dashboard/low-stock-parts');

@@ -28,16 +28,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useParts } from '@/hooks/use-parts';
-import { useAddPurchase } from '@/hooks/use-purchases';
-import { useSuppliers } from '@/hooks/use-suppliers';
+import { useParts } from '@/features/parts/queries';
+import { useAddPurchase } from '@/features/purchases/mutations';
+import { useSuppliers } from '@/features/suppliers/queries';
 
 import { addPurchaseSchema } from '../_lib/validators';
 
 export function AddPurchaseDialog() {
-  const { data: partsData } = useParts({ initialData: [] });
-  const { data: suppliersData } = useSuppliers({ initialData: [] });
-  const addPurchaseMutation = useAddPurchase();
+  const { data: partsData } = useParts();
+  const { data: suppliersData } = useSuppliers();
+  const addPurchase = useAddPurchase();
 
   const [open, setOpen] = useState(false);
   const [isCreatePending, startCreateTransition] = useTransition();
@@ -56,7 +56,7 @@ export function AddPurchaseDialog() {
 
   const handleSubmit = (data) => {
     startCreateTransition(async () => {
-      await addPurchaseMutation.mutateAsync({
+      await addPurchase.mutateAsync({
         ...data,
         part: { id: data.part },
         supplier: { id: data.supplier },
@@ -183,7 +183,7 @@ export function AddPurchaseDialog() {
             <DialogFooter>
               <Button type="submit" disabled={isCreatePending}>
                 {isCreatePending && <Loader aria-hidden="true" className="animate-spin" />}
-                Save
+                Add
               </Button>
             </DialogFooter>
           </form>

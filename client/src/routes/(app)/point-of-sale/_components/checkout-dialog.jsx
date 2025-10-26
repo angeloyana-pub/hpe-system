@@ -23,7 +23,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { paymentMethods } from '@/data/payment-methods';
-import { useAddOrder } from '@/hooks/use-orders';
+import { useAddOrder } from '@/features/orders/mutations';
 import { formatCurrency } from '@/lib/utils';
 
 import { paymentSchema } from '../_lib/validators';
@@ -31,7 +31,7 @@ import { useCart } from './cart-context';
 import { TransactionCompleteDialog } from './transaction-complete-dialog';
 
 export function CheckoutDialog(props) {
-  const addOrderMutation = useAddOrder();
+  const addOrder = useAddOrder();
 
   const { cart, total } = useCart();
   const [isSubmitPending, startSubmitTransition] = useTransition();
@@ -55,7 +55,7 @@ export function CheckoutDialog(props) {
     }
 
     startSubmitTransition(async () => {
-      await addOrderMutation.mutate({
+      await addOrder.mutate({
         ...data,
         orderItems: cart.map((cartItem) => ({
           quantity: cartItem.quantity,

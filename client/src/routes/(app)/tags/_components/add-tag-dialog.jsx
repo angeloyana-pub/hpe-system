@@ -21,12 +21,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useAddTag } from '@/hooks/use-tags';
+import { useAddTag } from '@/features/tags/mutations';
 
 import { addTagSchema } from '../_lib/validators';
 
 export function AddTagDialog() {
-  const addTagMutation = useAddTag();
+  const addTag = useAddTag();
 
   const [open, setOpen] = useState(false);
   const [isCreatePending, startCreateTransition] = useTransition();
@@ -37,7 +37,7 @@ export function AddTagDialog() {
 
   const handleSubmit = (data) => {
     startCreateTransition(async () => {
-      await addTagMutation.mutateAsync(data);
+      await addTag.mutateAsync(data);
       form.reset();
       setOpen(false);
     });
@@ -74,7 +74,7 @@ export function AddTagDialog() {
             <DialogFooter>
               <Button type="submit" disabled={isCreatePending}>
                 {isCreatePending && <Loader aria-hidden="true" className="animate-spin" />}
-                Save
+                Add
               </Button>
             </DialogFooter>
           </form>

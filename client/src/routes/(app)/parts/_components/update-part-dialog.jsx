@@ -28,14 +28,14 @@ import {
   MultiSelectTrigger,
   MultiSelectValue,
 } from '@/components/ui/multi-select';
-import { useUpdatePart } from '@/hooks/use-parts';
-import { useTags } from '@/hooks/use-tags';
+import { useUpdatePart } from '@/features/parts/mutations';
+import { useTags } from '@/features/tags/queries';
 
 import { updatePartSchema } from '../_lib/validators';
 
 export function UpdatePartDialog({ part, ...props }) {
-  const updatePartMutation = useUpdatePart();
-  const { data: tags } = useTags({ initialData: [] });
+  const updatePart = useUpdatePart();
+  const { data: tags } = useTags();
 
   const [isUpdatePending, startUpdateTransition] = useTransition();
 
@@ -55,7 +55,7 @@ export function UpdatePartDialog({ part, ...props }) {
   const handleSubmit = (data) => {
     startUpdateTransition(async () => {
       if (!part) return;
-      await updatePartMutation.mutateAsync({
+      await updatePart.mutateAsync({
         id: part.id,
         updatedPart: {
           ...data,
@@ -178,7 +178,7 @@ export function UpdatePartDialog({ part, ...props }) {
             <DialogFooter>
               <Button type="submit" disabled={isUpdatePending}>
                 {isUpdatePending && <Loader aria-hidden="true" className="animate-spin" />}
-                Save
+                Update
               </Button>
             </DialogFooter>
           </form>

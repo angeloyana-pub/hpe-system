@@ -1,23 +1,14 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { addSupplier, deleteSupplier, getSuppliers, updateSupplier } from '@/api/supplier';
+import { useAuthenticatedMutation } from '@/hooks/use-authenticated-mutation';
 
-import { useAuthenticatedMutation } from './use-authenticated-mutation';
-import { useAuthenticatedQuery } from './use-authenticated-query';
-
-export function useSuppliers(opts) {
-  return useAuthenticatedQuery({
-    queryKey: ['suppliers'],
-    queryFn: getSuppliers,
-    ...opts,
-  });
-}
+import { addSupplier, deleteSupplier, updateSupplier } from './service';
 
 export function useAddSupplier(opts) {
   const queryClient = useQueryClient();
 
   return useAuthenticatedMutation({
-    mutationFn: addSupplier,
+    mutationFn: (data) => addSupplier(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['suppliers']);
     },
@@ -29,7 +20,7 @@ export function useUpdateSupplier(opts) {
   const queryClient = useQueryClient();
 
   return useAuthenticatedMutation({
-    mutationFn: updateSupplier,
+    mutationFn: ({ id, updatedSupplier }) => updateSupplier(id, updatedSupplier),
     onSuccess: () => {
       queryClient.invalidateQueries(['suppliers']);
     },
@@ -41,7 +32,7 @@ export function useDeleteSupplier(opts) {
   const queryClient = useQueryClient();
 
   return useAuthenticatedMutation({
-    mutationFn: deleteSupplier,
+    mutationFn: (id) => deleteSupplier(id),
     onSuccess: () => {
       queryClient.invalidateQueries(['suppliers']);
     },

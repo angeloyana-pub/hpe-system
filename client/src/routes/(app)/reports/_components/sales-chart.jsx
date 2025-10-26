@@ -2,7 +2,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { useSalesReport } from '@/hooks/use-reports';
+import { useSalesReport } from '@/features/reports/queries';
 import { formatCurrency } from '@/lib/utils';
 
 const chartConfig = {

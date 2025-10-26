@@ -29,14 +29,14 @@ import {
   MultiSelectTrigger,
   MultiSelectValue,
 } from '@/components/ui/multi-select';
-import { useAddPart } from '@/hooks/use-parts';
-import { useTags } from '@/hooks/use-tags';
+import { useAddPart } from '@/features/parts/mutations';
+import { useTags } from '@/features/tags/queries';
 
 import { addPartSchema } from '../_lib/validators';
 
 export function AddPartDialog() {
-  const { data: tags } = useTags({ initialData: [] });
-  const addPartMutation = useAddPart();
+  const { data: tags } = useTags();
+  const addPart = useAddPart();
 
   const [open, setOpen] = useState(false);
   const [isCreatePending, startCreateTransition] = useTransition();
@@ -50,7 +50,7 @@ export function AddPartDialog() {
 
   const handleSubmit = (data) => {
     startCreateTransition(async () => {
-      await addPartMutation.mutateAsync({
+      await addPart.mutateAsync({
         ...data,
         tags: data.tags.map((tagId) => {
           const tag = tags.find((t) => tagId === t.id);
@@ -183,7 +183,7 @@ export function AddPartDialog() {
             <DialogFooter>
               <Button type="submit" disabled={isCreatePending}>
                 {isCreatePending && <Loader aria-hidden="true" className="animate-spin" />}
-                Save
+                Add
               </Button>
             </DialogFooter>
           </form>

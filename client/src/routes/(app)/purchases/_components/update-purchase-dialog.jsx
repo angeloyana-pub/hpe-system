@@ -27,16 +27,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useParts } from '@/hooks/use-parts';
-import { useUpdatePurchase } from '@/hooks/use-purchases';
-import { useSuppliers } from '@/hooks/use-suppliers';
+import { useParts } from '@/features/parts/queries';
+import { useUpdatePurchase } from '@/features/purchases/mutations';
+import { useSuppliers } from '@/features/suppliers/queries';
 
 import { updatePurchaseSchema } from '../_lib/validators';
 
 export function UpdatePurchaseDialog({ purchase, ...props }) {
-  const { data: partsData } = useParts({ initialData: [] });
-  const { data: suppliersData } = useSuppliers({ initialData: [] });
-  const updatePurchaseMutation = useUpdatePurchase();
+  const { data: partsData } = useParts();
+  const { data: suppliersData } = useSuppliers();
+  const updatePurchase = useUpdatePurchase();
 
   const [isUpdatePending, startUpdateTransition] = useTransition();
 
@@ -57,7 +57,7 @@ export function UpdatePurchaseDialog({ purchase, ...props }) {
   const handleSubmit = (data) => {
     startUpdateTransition(async () => {
       if (!purchase) return;
-      await updatePurchaseMutation.mutateAsync({
+      await updatePurchase.mutateAsync({
         id: purchase.id,
         updatedPurchase: {
           ...data,
@@ -180,7 +180,7 @@ export function UpdatePurchaseDialog({ purchase, ...props }) {
             <DialogFooter>
               <Button type="submit" disabled={isUpdatePending}>
                 {isUpdatePending && <Loader aria-hidden="true" className="animate-spin" />}
-                Save
+                Update
               </Button>
             </DialogFooter>
           </form>

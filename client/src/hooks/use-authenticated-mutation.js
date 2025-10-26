@@ -10,8 +10,8 @@ export function useAuthenticatedMutation(opts) {
     ...opts,
     onError: (err) => {
       opts?.onError?.(err);
-      toast.error('Session expired, please login.');
       if (axios.isAxiosError(err) && err.response?.status === 401) {
+        toast.error('Session expired, please login.');
         navigate('/login');
       }
     },

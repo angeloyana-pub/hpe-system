@@ -1,23 +1,14 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { addPart, deletePart, getParts, updatePart } from '@/api/part';
+import { useAuthenticatedMutation } from '@/hooks/use-authenticated-mutation';
 
-import { useAuthenticatedMutation } from './use-authenticated-mutation';
-import { useAuthenticatedQuery } from './use-authenticated-query';
-
-export function useParts(opts) {
-  return useAuthenticatedQuery({
-    queryKey: ['parts'],
-    queryFn: getParts,
-    ...opts,
-  });
-}
+import { addPart, deletePart, updatePart } from './service';
 
 export function useAddPart(opts) {
   const queryClient = useQueryClient();
 
   return useAuthenticatedMutation({
-    mutationFn: addPart,
+    mutationFn: (data) => addPart(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['parts']);
     },
@@ -29,7 +20,7 @@ export function useUpdatePart(opts) {
   const queryClient = useQueryClient();
 
   return useAuthenticatedMutation({
-    mutationFn: updatePart,
+    mutationFn: ({ id, updatedPart }) => updatePart(id, updatedPart),
     onSuccess: () => {
       queryClient.invalidateQueries(['parts']);
     },
@@ -41,7 +32,7 @@ export function useDeletePart(opts) {
   const queryClient = useQueryClient();
 
   return useAuthenticatedMutation({
-    mutationFn: deletePart,
+    mutationFn: (id) => deletePart(id),
     onSuccess: () => {
       queryClient.invalidateQueries(['parts']);
     },

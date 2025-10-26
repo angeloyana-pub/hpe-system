@@ -21,12 +21,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useAddSupplier } from '@/hooks/use-suppliers';
+import { useAddSupplier } from '@/features/suppliers/mutations';
 
 import { addSupplierSchema } from '../_lib/validators';
 
 export function AddSupplierDialog() {
-  const addSupplierMutation = useAddSupplier();
+  const addSupplier = useAddSupplier();
 
   const [open, setOpen] = useState(false);
   const [isCreatePending, startCreateTransition] = useTransition();
@@ -37,7 +37,7 @@ export function AddSupplierDialog() {
 
   const handleSubmit = (data) => {
     startCreateTransition(async () => {
-      await addSupplierMutation.mutateAsync(data);
+      await addSupplier.mutateAsync(data);
       form.reset();
       setOpen(false);
     });
@@ -74,7 +74,7 @@ export function AddSupplierDialog() {
             <DialogFooter>
               <Button type="submit" disabled={isCreatePending}>
                 {isCreatePending && <Loader aria-hidden="true" className="animate-spin" />}
-                Save
+                Add
               </Button>
             </DialogFooter>
           </form>

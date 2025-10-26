@@ -2,22 +2,23 @@ import { useEffect, useState } from 'react';
 
 import { DataTable } from '@/components/custom/data-table';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { useDeleteSupplier, useSuppliers } from '@/hooks/use-suppliers';
+import { useDeleteSupplier } from '@/features/suppliers/mutations';
+import { useSuppliers } from '@/features/suppliers/queries';
 
 import { AddSupplierDialog } from './_components/add-supplier-dialog';
 import { UpdateSupplierDialog } from './_components/update-supplier-dialog';
 import { getColumns } from './_lib/columns';
 
 function Suppliers() {
-  const deleteSupplierMutation = useDeleteSupplier();
-  const { data } = useSuppliers({ initialData: [] });
+  const deleteSupplier = useDeleteSupplier();
+  const { data } = useSuppliers();
 
   const [rowAction, setRowAction] = useState(null);
   const columns = getColumns({ setRowAction });
 
   useEffect(() => {
     if (rowAction === null || rowAction.variant != 'delete') return;
-    deleteSupplierMutation.mutate(rowAction.row.original.id);
+    deleteSupplier.mutate(rowAction.row.original.id);
   }, [rowAction]);
 
   return (

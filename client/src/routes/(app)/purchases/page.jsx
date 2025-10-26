@@ -2,22 +2,23 @@ import { useEffect, useState } from 'react';
 
 import { DataTable } from '@/components/custom/data-table';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { useDeletePurchase, usePurchases } from '@/hooks/use-purchases';
+import { useDeletePurchase } from '@/features/purchases/mutations';
+import { usePurchases } from '@/features/purchases/queries';
 
 import { AddPurchaseDialog } from './_components/add-purchase-dialog';
 import { UpdatePurchaseDialog } from './_components/update-purchase-dialog';
 import { getColumns } from './_lib/columns';
 
 function Purchases() {
-  const deletePurchaseMutation = useDeletePurchase();
-  const { data } = usePurchases({ initialData: [] });
+  const deletePurchase = useDeletePurchase();
+  const { data } = usePurchases();
 
   const [rowAction, setRowAction] = useState(null);
   const columns = getColumns({ setRowAction });
 
   useEffect(() => {
     if (rowAction === null || rowAction.variant != 'delete') return;
-    deletePurchaseMutation.mutate(rowAction.row.original.id);
+    deletePurchase.mutate(rowAction.row.original.id);
   }, [rowAction]);
 
   return (

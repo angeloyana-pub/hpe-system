@@ -4,13 +4,13 @@ import { NumberInput } from '@/components/custom/number-input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useParts } from '@/hooks/use-parts';
+import { useParts } from '@/features/parts/queries';
 import { formatCurrency } from '@/lib/utils';
 
 import { useCart } from './cart-context';
 
 export function PartsList() {
-  const { data: parts } = useParts({ initialData: [] });
+  const { data: parts } = useParts();
   const { addToCart, getCartItem, setQuantity } = useCart();
 
   return (

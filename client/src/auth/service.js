@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { client } from './client';
+import { client } from '@/api/client';
 
 export async function getCurrentUser() {
   try {

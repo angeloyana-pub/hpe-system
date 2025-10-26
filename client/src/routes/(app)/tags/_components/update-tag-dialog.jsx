@@ -20,12 +20,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useUpdateTag } from '@/hooks/use-tags';
+import { useUpdateTag } from '@/features/tags/mutations';
 
 import { updateTagSchema } from '../_lib/validators';
 
 export function UpdateTagDialog({ tag, ...props }) {
-  const updateTagMutation = useUpdateTag();
+  const updateTag = useUpdateTag();
 
   const [isUpdatePending, startUpdateTransition] = useTransition();
 
@@ -42,7 +42,7 @@ export function UpdateTagDialog({ tag, ...props }) {
   const handleSubmit = (data) => {
     startUpdateTransition(async () => {
       if (!tag) return;
-      await updateTagMutation.mutateAsync({
+      await updateTag.mutateAsync({
         id: tag.id,
         updatedTag: data,
       });
@@ -75,7 +75,7 @@ export function UpdateTagDialog({ tag, ...props }) {
             <DialogFooter>
               <Button type="submit" disabled={isUpdatePending}>
                 {isUpdatePending && <Loader aria-hidden="true" className="animate-spin" />}
-                Save
+                Update
               </Button>
             </DialogFooter>
           </form>

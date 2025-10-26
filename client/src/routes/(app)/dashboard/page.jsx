@@ -11,21 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useLowStockParts, useTotalOrders, useTotalSales } from '@/hooks/use-dashboard';
+import { useLowStockParts, useTotalOrders, useTotalSales } from '@/features/dashboard/queries';
 import { formatCurrency } from '@/lib/utils';
 
 function Dashboard() {
-  const { data: totalSales } = useTotalSales({
-    initialData: {
-      totalSales: 0,
-    },
-  });
-  const { data: totalOrders } = useTotalOrders({
-    initialData: {
-      totalOrders: 0,
-    },
-  });
-  const { data: lowStockParts } = useLowStockParts({ initialData: [] });
+  const { data: totalSales } = useTotalSales();
+  const { data: totalOrders } = useTotalOrders();
+  const { data: lowStockParts } = useLowStockParts();
 
   return (
     <SidebarInset>

@@ -2,22 +2,23 @@ import { useEffect, useState } from 'react';
 
 import { DataTable } from '@/components/custom/data-table';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { useDeletePart, useParts } from '@/hooks/use-parts';
+import { useDeletePart } from '@/features/parts/mutations';
+import { useParts } from '@/features/parts/queries';
 
 import { AddPartDialog } from './_components/add-part-dialog';
 import { UpdatePartDialog } from './_components/update-part-dialog';
 import { getColumns } from './_lib/columns';
 
 function Parts() {
-  const deletePartMutation = useDeletePart();
-  const { data } = useParts({ initialData: [] });
+  const deletePart = useDeletePart();
+  const { data } = useParts();
 
   const [rowAction, setRowAction] = useState(null);
   const columns = getColumns({ setRowAction });
 
   useEffect(() => {
     if (rowAction === null || rowAction.variant != 'delete') return;
-    deletePartMutation.mutate(rowAction.row.original.id);
+    deletePart.mutate(rowAction.row.original.id);
   }, [rowAction]);
 
   return (
