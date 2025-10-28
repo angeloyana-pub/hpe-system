@@ -12,6 +12,6 @@ public interface PartRepository extends JpaRepository<Part, Long> {
   @Query("UPDATE Part p SET p.stock = p.stock - :stock WHERE p.id = :id")
   int decreaseStock(@Param("id") Long id, @Param("stock") Integer stock);
 
-  @Query("SELECT p from Part p WHERE p.stock < :stock ORDER BY p.stock ASC")
-  List<Part> getLowStockParts(@Param("stock") Integer stock);
+  @Query("SELECT p from Part p WHERE p.stock <= p.lowStockThreshold ORDER BY p.stock ASC LIMIT 10")
+  List<Part> getLowStockParts();
 }

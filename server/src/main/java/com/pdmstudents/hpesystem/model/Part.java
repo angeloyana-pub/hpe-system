@@ -14,6 +14,7 @@ public class Part {
   private String name;
   private String size;
   private Integer stock;
+  private Integer lowStockThreshold;
 
   @Column(precision = 10, scale = 2)
   private BigDecimal price;
@@ -24,6 +25,13 @@ public class Part {
       joinColumns = @JoinColumn(name = "part_id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   private List<Tag> tags;
+
+  @PrePersist
+  protected void onCreate() {
+    if (lowStockThreshold == null) {
+      lowStockThreshold = 5;
+    }
+  }
 
   public Long getId() {
     return id;
@@ -55,6 +63,14 @@ public class Part {
 
   public void setStock(Integer stock) {
     this.stock = stock;
+  }
+
+  public Integer getLowStockThreshold() {
+    return lowStockThreshold;
+  }
+
+  public void setLowStockThreshold(Integer lowStockThreshold) {
+    this.lowStockThreshold = lowStockThreshold;
   }
 
   public BigDecimal getPrice() {

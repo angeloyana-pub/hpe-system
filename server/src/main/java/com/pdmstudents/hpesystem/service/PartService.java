@@ -36,6 +36,9 @@ public class PartService {
               if (updatedPart.getStock() != null) {
                 part.setStock(updatedPart.getStock());
               }
+              if (updatedPart.getLowStockThreshold() != null) {
+                part.setLowStockThreshold(updatedPart.getLowStockThreshold());
+              }
               if (updatedPart.getPrice() != null) {
                 part.setPrice(updatedPart.getPrice());
               }

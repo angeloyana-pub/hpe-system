@@ -128,6 +128,28 @@ export function AddPartDialog() {
             />
             <FormField
               control={form.control}
+              name="lowStockThreshold"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Low Stock Threshold</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Threshold"
+                      {...field}
+                      value={String(field.value ?? '')}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        field.onChange(!isNaN(value) ? value : undefined);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="price"
               render={({ field }) => (
                 <FormItem>

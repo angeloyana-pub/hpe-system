@@ -22,7 +22,7 @@ public class DashboardService {
   }
 
   public List<Part> getLowStockParts() {
-    return partRepo.getLowStockParts(5); // TODO: implement custom low stock threshold per parts.
+    return partRepo.getLowStockParts();
   }
 
   public BigDecimal getTotalSales() {

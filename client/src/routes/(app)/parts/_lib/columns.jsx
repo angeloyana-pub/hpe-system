@@ -30,6 +30,11 @@ export function getColumns({ setRowAction }) {
       cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
     },
     {
+      accessorKey: 'lowStockThreshold',
+      header: 'Low Stock Threshold',
+      cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
+    },
+    {
       accessorKey: 'price',
       header: 'Price',
       cell: ({ getValue }) => (
