@@ -16,8 +16,9 @@ public class ReportsController {
   }
 
   @GetMapping("/sales")
-  public ApiResponse<List<Map<String, Object>>> getSalesReport() {
-    List<Map<String, Object>> salesReport = service.getSalesReport();
+  public ApiResponse<List<Map<String, Object>>> getSalesReport(
+      @RequestParam(defaultValue = "month") String interval) {
+    List<Map<String, Object>> salesReport = service.getSalesReport(interval);
     return new ApiResponse<>(200, salesReport);
   }
 }

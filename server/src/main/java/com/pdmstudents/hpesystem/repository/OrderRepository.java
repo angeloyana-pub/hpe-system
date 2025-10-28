@@ -13,13 +13,28 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
       value =
           """
     SELECT
-      DATE_FORMAT(o.created_at, '%M') AS month,
-      COALESCE(SUM(oi.quantity * oi.price), 0)
+      YEAR(o.created_at),
+      MONTHNAME(o.created_at),
+      COALESCE(SUM(oi.price * oi.quantity), 0)
     FROM orders o
     LEFT JOIN order_items oi ON oi.order_id = o.id
-    GROUP BY month
-    ORDER BY o.created_at ASC
+    GROUP BY YEAR(o.created_at), MONTH(o.created_at)
+    ORDER BY YEAR(o.created_at), MONTH(o.created_at)
   """,
       nativeQuery = true)
   List<Object[]> getMonthlySales();
+
+  @Query(
+      value =
+          """
+    SELECT
+      YEAR(o.created_at),
+      COALESCE(SUM(oi.price * oi.quantity), 0)
+    FROM orders o
+    LEFT JOIN order_items oi ON oi.order_id = o.id
+    GROUP BY YEAR(o.created_at)
+    ORDER BY YEAR(o.created_at)
+  """,
+      nativeQuery = true)
+  List<Object[]> getYearlySales();
 }

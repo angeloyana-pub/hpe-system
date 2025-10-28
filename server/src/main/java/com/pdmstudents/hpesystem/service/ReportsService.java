@@ -13,13 +13,27 @@ public class ReportsService {
     this.orderRepo = orderRepo;
   }
 
-  public List<Map<String, Object>> getSalesReport() {
-    return orderRepo.getMonthlySales().stream()
+  public List<Map<String, Object>> getSalesReport(String interval) {
+    List<Object[]> salesReport =
+        switch (interval) {
+          case "year" -> orderRepo.getYearlySales();
+          default -> orderRepo.getMonthlySales();
+        };
+
+    return salesReport.stream()
         .map(
             row ->
-                Map.of(
-                    "month", row[0],
-                    "totalSales", row[1]))
+                switch (interval) {
+                  case "year" ->
+                      Map.of(
+                          "year", row[0],
+                          "totalSales", row[1]);
+                  default ->
+                      Map.of(
+                          "year", row[0],
+                          "month", row[1],
+                          "totalSales", row[2]);
+                })
         .toList();
   }
 }

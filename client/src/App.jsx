@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
 import { Toaster } from '@/components/ui/sonner';
@@ -20,7 +21,7 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <>
+    <NuqsAdapter>
       <Toaster />
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
@@ -43,7 +44,7 @@ function App() {
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
-    </>
+    </NuqsAdapter>
   );
 }
 
