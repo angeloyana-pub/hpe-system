@@ -13,9 +13,7 @@ function PointOfSale() {
       </header>
       <CartProvider>
         <div className="p-4 flex gap-4 h-[calc(100%-var(--spacing)*14)]">
-          <div className="@container flex-1 overflow-y-auto">
-            <PartsList />
-          </div>
+          <PartsList />
           <OrderSummary />
         </div>
       </CartProvider>
