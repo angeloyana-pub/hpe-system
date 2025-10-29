@@ -4,6 +4,8 @@ import com.pdmstudents.hpesystem.dto.ApiResponse;
 import com.pdmstudents.hpesystem.model.Part;
 import com.pdmstudents.hpesystem.service.PartService;
 import java.util.List;
+import java.util.Map;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +18,22 @@ public class PartController {
   }
 
   @GetMapping
-  public ApiResponse<List<Part>> getParts() {
-    List<Part> parts = service.getParts();
+  public ApiResponse<Map<String, Object>> getParts(
+      @RequestParam(required = false) String name,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int perPage,
+      @RequestParam(name = "tagIds", required = false) List<Long> tagIds) {
+    Page<Part> result = service.getParts(name, tagIds, page, perPage);
+    return new ApiResponse<>(
+        200,
+        Map.of(
+            "parts", result.getContent(),
+            "pageCount", result.getTotalPages()));
+  }
+
+  @GetMapping("/all")
+  public ApiResponse<List<Part>> getAllParts() {
+    List<Part> parts = service.getAllParts();
     return new ApiResponse<>(200, parts);
   }
 

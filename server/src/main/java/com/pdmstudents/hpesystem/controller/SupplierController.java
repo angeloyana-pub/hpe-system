@@ -4,6 +4,8 @@ import com.pdmstudents.hpesystem.dto.ApiResponse;
 import com.pdmstudents.hpesystem.model.Supplier;
 import com.pdmstudents.hpesystem.service.SupplierService;
 import java.util.List;
+import java.util.Map;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +18,21 @@ public class SupplierController {
   }
 
   @GetMapping
-  public ApiResponse<List<Supplier>> getSuppliers() {
-    List<Supplier> suppliers = service.getSuppliers();
+  public ApiResponse<Map<String, Object>> getSuppliers(
+      @RequestParam(required = false) String name,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int perPage) {
+    Page<Supplier> result = service.getSuppliers(name, page, perPage);
+    return new ApiResponse<>(
+        200,
+        Map.of(
+            "suppliers", result.getContent(),
+            "pageCount", result.getTotalPages()));
+  }
+
+  @GetMapping("/all")
+  public ApiResponse<List<Supplier>> getAllSuppliers() {
+    List<Supplier> suppliers = service.getAllSuppliers();
     return new ApiResponse<>(200, suppliers);
   }
 

@@ -1,7 +1,12 @@
 import { client } from '@/api/client';
 
-export async function getTags() {
-  const res = await client.get('/tags');
+export async function getTags(params) {
+  const res = await client.get('/tags', { params });
+  return res.data.data;
+}
+
+export async function getAllTags() {
+  const res = await client.get('/tags/all');
   return res.data.data;
 }
 

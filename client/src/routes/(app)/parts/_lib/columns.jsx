@@ -10,15 +10,21 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatCurrency } from '@/lib/utils';
 
-export function getColumns({ setRowAction }) {
+export function getColumns({ setRowAction, tags }) {
   return [
     {
       accessorKey: 'id',
       header: 'Part ID',
     },
     {
+      id: 'name',
       accessorKey: 'name',
       header: 'Name',
+      enableColumnFilter: true,
+      meta: {
+        placeholder: 'Search names...',
+        variant: 'text',
+      },
     },
     {
       accessorKey: 'size',
@@ -42,6 +48,7 @@ export function getColumns({ setRowAction }) {
       ),
     },
     {
+      id: 'tagIds',
       accessorKey: 'tags',
       header: 'Tags',
       cell: ({ getValue }) => {
@@ -59,6 +66,12 @@ export function getColumns({ setRowAction }) {
             ))}
           </div>
         );
+      },
+      enableColumnFilter: true,
+      meta: {
+        label: 'Tags',
+        variant: 'multiSelect',
+        options: tags.map((tag) => ({ label: tag.name, value: tag.id })),
       },
     },
     {

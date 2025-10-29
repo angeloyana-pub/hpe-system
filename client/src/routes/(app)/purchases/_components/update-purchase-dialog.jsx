@@ -27,15 +27,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useParts } from '@/features/parts/queries';
+import { useAllParts } from '@/features/parts/queries';
 import { useUpdatePurchase } from '@/features/purchases/mutations';
-import { useSuppliers } from '@/features/suppliers/queries';
+import { useAllSuppliers } from '@/features/suppliers/queries';
 
 import { updatePurchaseSchema } from '../_lib/validators';
 
 export function UpdatePurchaseDialog({ purchase, ...props }) {
-  const { data: partsData } = useParts();
-  const { data: suppliersData } = useSuppliers();
+  const { data: partsData = [] } = useAllParts();
+  const { data: suppliersData = [] } = useAllSuppliers();
   const updatePurchase = useUpdatePurchase();
 
   const [isUpdatePending, startUpdateTransition] = useTransition();

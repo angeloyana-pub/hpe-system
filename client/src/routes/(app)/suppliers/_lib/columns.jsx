@@ -15,8 +15,14 @@ export function getColumns({ setRowAction }) {
       header: 'Supplier ID',
     },
     {
+      id: 'name',
       accessorKey: 'name',
       header: 'Name',
+      enableColumnFilter: true,
+      meta: {
+        placeholder: 'Search names...',
+        variant: 'text',
+      },
     },
     {
       id: 'actions',

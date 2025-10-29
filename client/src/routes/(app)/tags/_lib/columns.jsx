@@ -15,8 +15,14 @@ export function getColumns({ setRowAction }) {
       header: 'Tag ID',
     },
     {
+      id: 'name',
       accessorKey: 'name',
       header: 'Name',
+      enableColumnFilter: true,
+      meta: {
+        placeholder: 'Search names...',
+        variant: 'text',
+      },
     },
     {
       id: 'actions',

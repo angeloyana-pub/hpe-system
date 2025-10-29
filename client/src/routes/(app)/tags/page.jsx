@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { DataTable } from '@/components/custom/data-table';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { useDeleteTag } from '@/features/tags/mutations';
 import { useTags } from '@/features/tags/queries';
 
-import { AddTagDialog } from './_components/add-tag-dialog';
+import { TagsTable } from './_components/tags-table';
 import { UpdateTagDialog } from './_components/update-tag-dialog';
 import { getColumns } from './_lib/columns';
 
 function Tags() {
   const deleteTag = useDeleteTag();
-  const { data } = useTags();
+  const { data = { tags: [], pageCount: 0 } } = useTags();
 
   const [rowAction, setRowAction] = useState(null);
-  const columns = getColumns({ setRowAction });
+  const columns = useMemo(() => getColumns({ setRowAction }), []);
 
   useEffect(() => {
     if (rowAction === null || rowAction.variant != 'delete') return;
@@ -28,10 +27,7 @@ function Tags() {
         Tags
       </header>
       <div className="p-4 space-y-4">
-        <div className="flex">
-          <AddTagDialog />
-        </div>
-        <DataTable columns={columns} data={data} />
+        <TagsTable data={data} columns={columns} />
         <UpdateTagDialog
           open={rowAction?.variant === 'update'}
           onOpenChange={() => setRowAction(null)}

@@ -1,7 +1,7 @@
 import { client } from '@/api/client';
 
-export async function getOrders() {
-  const res = await client.get('/orders');
+export async function getOrders(params) {
+  const res = await client.get('/orders', { params });
   return res.data.data;
 }
 

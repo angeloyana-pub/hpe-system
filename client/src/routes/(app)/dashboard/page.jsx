@@ -15,9 +15,9 @@ import { useLowStockParts, useTotalOrders, useTotalSales } from '@/features/dash
 import { formatCurrency } from '@/lib/utils';
 
 function Dashboard() {
-  const { data: totalSales } = useTotalSales();
-  const { data: totalOrders } = useTotalOrders();
-  const { data: lowStockParts } = useLowStockParts();
+  const { data: totalSales = [] } = useTotalSales();
+  const { data: totalOrders = [] } = useTotalOrders();
+  const { data: lowStockParts = [] } = useLowStockParts();
 
   return (
     <SidebarInset>

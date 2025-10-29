@@ -10,7 +10,7 @@ export function useSalesReport(opts) {
   return useAuthenticatedQuery({
     queryKey: ['reports', 'sales', { interval }],
     queryFn: () => getSalesReport(interval),
-    initialData: [],
+    placeholderData: (prevData) => prevData,
     ...opts,
   });
 }

@@ -3,6 +3,9 @@ package com.pdmstudents.hpesystem.service;
 import com.pdmstudents.hpesystem.model.Tag;
 import com.pdmstudents.hpesystem.repository.TagRepository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,7 +18,12 @@ public class TagService {
     this.repo = repo;
   }
 
-  public List<Tag> getTags() {
+  public Page<Tag> getTags(String name, int page, int perPage) {
+    Pageable pageable = PageRequest.of(page - 1, perPage);
+    return repo.getTags(name, pageable);
+  }
+
+  public List<Tag> getAllTags() {
     return repo.findAll();
   }
 

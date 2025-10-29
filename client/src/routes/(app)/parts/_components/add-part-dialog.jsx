@@ -30,12 +30,12 @@ import {
   MultiSelectValue,
 } from '@/components/ui/multi-select';
 import { useAddPart } from '@/features/parts/mutations';
-import { useTags } from '@/features/tags/queries';
+import { useAllTags } from '@/features/tags/queries';
 
 import { addPartSchema } from '../_lib/validators';
 
 export function AddPartDialog() {
-  const { data: tags } = useTags();
+  const { data: tags = [] } = useAllTags();
   const addPart = useAddPart();
 
   const [open, setOpen] = useState(false);

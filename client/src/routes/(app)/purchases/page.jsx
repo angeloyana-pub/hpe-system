@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { DataTable } from '@/components/custom/data-table';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { useDeletePurchase } from '@/features/purchases/mutations';
 import { usePurchases } from '@/features/purchases/queries';
 
-import { AddPurchaseDialog } from './_components/add-purchase-dialog';
+import { PurchasesTable } from './_components/purchases-table';
 import { UpdatePurchaseDialog } from './_components/update-purchase-dialog';
 import { getColumns } from './_lib/columns';
 
 function Purchases() {
   const deletePurchase = useDeletePurchase();
-  const { data } = usePurchases();
+  const { data = { purchases: [], pageCount: 0 } } = usePurchases();
 
   const [rowAction, setRowAction] = useState(null);
-  const columns = getColumns({ setRowAction });
+  const columns = useMemo(() => getColumns({ setRowAction }), []);
 
   useEffect(() => {
     if (rowAction === null || rowAction.variant != 'delete') return;
@@ -28,10 +27,7 @@ function Purchases() {
         Purchases
       </header>
       <div className="p-4 space-y-4">
-        <div className="flex">
-          <AddPurchaseDialog />
-        </div>
-        <DataTable columns={columns} data={data} />
+        <PurchasesTable data={data} columns={columns} />
         <UpdatePurchaseDialog
           open={rowAction?.variant === 'update'}
           onOpenChange={() => setRowAction(null)}

@@ -6,7 +6,7 @@ export function useLowStockParts(opts) {
   return useAuthenticatedQuery({
     queryKey: ['dashboard', 'lowStockParts'],
     queryFn: () => getLowStockParts(),
-    initialData: [],
+    placeholderData: (prevData) => prevData,
     ...opts,
   });
 }
@@ -15,7 +15,7 @@ export function useTotalSales(opts) {
   return useAuthenticatedQuery({
     queryKey: ['dashboard', 'totalSales'],
     queryFn: () => getTotalSales(),
-    initialData: { totalSales: 0 },
+    placeholderData: (prevData) => prevData,
     ...opts,
   });
 }
@@ -24,7 +24,7 @@ export function useTotalOrders(opts) {
   return useAuthenticatedQuery({
     queryKey: ['dashboard', 'totalOrders'],
     queryFn: () => getTotalOrders(),
-    initialData: { totalOrders: 0 },
+    placeholderData: (prevData) => prevData,
     ...opts,
   });
 }

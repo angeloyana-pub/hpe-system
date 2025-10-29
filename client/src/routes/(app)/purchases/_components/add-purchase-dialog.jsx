@@ -28,15 +28,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useParts } from '@/features/parts/queries';
+import { useAllParts } from '@/features/parts/queries';
 import { useAddPurchase } from '@/features/purchases/mutations';
-import { useSuppliers } from '@/features/suppliers/queries';
+import { useAllSuppliers } from '@/features/suppliers/queries';
 
 import { addPurchaseSchema } from '../_lib/validators';
 
 export function AddPurchaseDialog() {
-  const { data: partsData } = useParts();
-  const { data: suppliersData } = useSuppliers();
+  const { data: partsData = [] } = useAllParts();
+  const { data: suppliersData = [] } = useAllSuppliers();
   const addPurchase = useAddPurchase();
 
   const [open, setOpen] = useState(false);
@@ -98,7 +98,7 @@ export function AddPurchaseDialog() {
                     </FormControl>
                     <SelectContent>
                       {partsData.map((part) => (
-                        <SelectItem key={part.name} value={String(part.id)}>
+                        <SelectItem key={part.id} value={String(part.id)}>
                           {part.name}
                         </SelectItem>
                       ))}
@@ -170,7 +170,7 @@ export function AddPurchaseDialog() {
                     </FormControl>
                     <SelectContent>
                       {suppliersData.map((supplier) => (
-                        <SelectItem key={supplier.name} value={String(supplier.id)}>
+                        <SelectItem key={supplier.id} value={String(supplier.id)}>
                           {supplier.name}
                         </SelectItem>
                       ))}

@@ -4,7 +4,9 @@ import com.pdmstudents.hpesystem.model.Purchase;
 import com.pdmstudents.hpesystem.repository.PartRepository;
 import com.pdmstudents.hpesystem.repository.PurchaseRepository;
 import com.pdmstudents.hpesystem.repository.SupplierRepository;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,8 +24,9 @@ public class PurchaseService {
     this.partRepo = partRepo;
   }
 
-  public List<Purchase> getPurchases() {
-    return repo.findAll();
+  public Page<Purchase> getPurchases(int page, int perPage) {
+    Pageable pageable = PageRequest.of(page - 1, perPage);
+    return repo.getPurchases(pageable);
   }
 
   public Purchase createPurchase(Purchase purchase) {

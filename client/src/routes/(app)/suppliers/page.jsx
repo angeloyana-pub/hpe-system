@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { DataTable } from '@/components/custom/data-table';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { useDeleteSupplier } from '@/features/suppliers/mutations';
 import { useSuppliers } from '@/features/suppliers/queries';
 
-import { AddSupplierDialog } from './_components/add-supplier-dialog';
+import { SuppliersTable } from './_components/suppliers-table';
 import { UpdateSupplierDialog } from './_components/update-supplier-dialog';
 import { getColumns } from './_lib/columns';
 
 function Suppliers() {
   const deleteSupplier = useDeleteSupplier();
-  const { data } = useSuppliers();
+  const { data = { suppliers: [], pageCount: 0 } } = useSuppliers();
 
   const [rowAction, setRowAction] = useState(null);
-  const columns = getColumns({ setRowAction });
+  const columns = useMemo(() => getColumns({ setRowAction }), []);
 
   useEffect(() => {
     if (rowAction === null || rowAction.variant != 'delete') return;
@@ -28,10 +27,7 @@ function Suppliers() {
         Suppliers
       </header>
       <div className="p-4 space-y-4">
-        <div className="flex">
-          <AddSupplierDialog />
-        </div>
-        <DataTable columns={columns} data={data} />
+        <SuppliersTable data={data} columns={columns} />
         <UpdateSupplierDialog
           open={rowAction?.variant === 'update'}
           onOpenChange={() => setRowAction(null)}

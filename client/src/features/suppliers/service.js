@@ -1,7 +1,12 @@
 import { client } from '@/api/client';
 
-export async function getSuppliers() {
-  const res = await client.get('/suppliers');
+export async function getSuppliers(params) {
+  const res = await client.get('/suppliers', { params });
+  return res.data.data;
+}
+
+export async function getAllSuppliers() {
+  const res = await client.get('/suppliers/all');
   return res.data.data;
 }
 

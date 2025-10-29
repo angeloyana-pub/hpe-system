@@ -1,16 +1,14 @@
-import { Calculator } from 'lucide-react';
-import { Link } from 'react-router';
+import { useMemo } from 'react';
 
-import { DataTable } from '@/components/custom/data-table';
-import { buttonVariants } from '@/components/ui/button';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { useOrders } from '@/features/orders/queries';
 
+import { OrdersTable } from './_components/orders-table';
 import { getColumns } from './_lib/columns';
 
 function Orders() {
-  const { data } = useOrders();
-  const columns = getColumns();
+  const { data = { orders: [], pageCount: 0 } } = useOrders();
+  const columns = useMemo(() => getColumns(), []);
 
   return (
     <SidebarInset>
@@ -19,13 +17,7 @@ function Orders() {
         Orders
       </header>
       <div className="p-4 space-y-4">
-        <div className="flex">
-          <Link to="/point-of-sale" className={buttonVariants()}>
-            <Calculator />
-            Point of Sale
-          </Link>
-        </div>
-        <DataTable columns={columns} data={data} />
+        <OrdersTable data={data} columns={columns} />
       </div>
     </SidebarInset>
   );

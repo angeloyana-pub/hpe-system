@@ -3,7 +3,8 @@ package com.pdmstudents.hpesystem.controller;
 import com.pdmstudents.hpesystem.dto.ApiResponse;
 import com.pdmstudents.hpesystem.model.Order;
 import com.pdmstudents.hpesystem.service.OrderService;
-import java.util.List;
+import java.util.Map;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,9 +17,14 @@ public class OrderController {
   }
 
   @GetMapping
-  public ApiResponse<List<Order>> getOrders() {
-    List<Order> orders = service.getOrders();
-    return new ApiResponse<>(200, orders);
+  public ApiResponse<Map<String, Object>> getOrders(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int perPage) {
+    Page<Order> result = service.getOrders(page, perPage);
+    return new ApiResponse<>(
+        200,
+        Map.of(
+            "orders", result.getContent(),
+            "pageCount", result.getTotalPages()));
   }
 
   @PostMapping

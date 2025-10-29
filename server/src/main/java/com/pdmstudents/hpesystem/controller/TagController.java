@@ -4,6 +4,8 @@ import com.pdmstudents.hpesystem.dto.ApiResponse;
 import com.pdmstudents.hpesystem.model.Tag;
 import com.pdmstudents.hpesystem.service.TagService;
 import java.util.List;
+import java.util.Map;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +18,21 @@ public class TagController {
   }
 
   @GetMapping
-  public ApiResponse<List<Tag>> getTags() {
-    List<Tag> tags = service.getTags();
+  public ApiResponse<Map<String, Object>> getTags(
+      @RequestParam(required = false) String name,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int perPage) {
+    Page<Tag> result = service.getTags(name, page, perPage);
+    return new ApiResponse<>(
+        200,
+        Map.of(
+            "tags", result.getContent(),
+            "pageCount", result.getTotalPages()));
+  }
+
+  @GetMapping("/all")
+  public ApiResponse<List<Tag>> getAllTags() {
+    List<Tag> tags = service.getAllTags();
     return new ApiResponse<>(200, tags);
   }
 

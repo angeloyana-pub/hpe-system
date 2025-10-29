@@ -29,13 +29,13 @@ import {
   MultiSelectValue,
 } from '@/components/ui/multi-select';
 import { useUpdatePart } from '@/features/parts/mutations';
-import { useTags } from '@/features/tags/queries';
+import { useAllTags } from '@/features/tags/queries';
 
 import { updatePartSchema } from '../_lib/validators';
 
 export function UpdatePartDialog({ part, ...props }) {
   const updatePart = useUpdatePart();
-  const { data: tags } = useTags();
+  const { data: tags = [] } = useAllTags();
 
   const [isUpdatePending, startUpdateTransition] = useTransition();
 
