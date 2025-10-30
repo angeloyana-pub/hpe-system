@@ -32,17 +32,17 @@ export function getColumns({ setRowAction, tags }) {
     },
     {
       accessorKey: 'stock',
-      header: 'Stock',
+      header: () => <div className="text-right font-medium">Stock</div>,
       cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
     },
     {
       accessorKey: 'lowStockThreshold',
-      header: 'Low Stock Threshold',
+      header: () => <div className="text-right font-medium">Low Stock Threshold</div>,
       cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
     },
     {
       accessorKey: 'price',
-      header: 'Price',
+      header: () => <div className="text-right font-medium">Price</div>,
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),

@@ -22,7 +22,10 @@ public class Order {
 
   private LocalDateTime createdAt;
 
-  @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+  @OneToMany(
+      mappedBy = "order",
+      cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+      orphanRemoval = true)
   private List<OrderItem> orderItems;
 
   @PrePersist
@@ -70,5 +73,13 @@ public class Order {
 
   public void setOrderItems(List<OrderItem> orderItems) {
     this.orderItems = orderItems;
+  }
+
+  public BigDecimal getTotal() {
+    return orderItems != null
+        ? orderItems.stream()
+            .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+            .reduce(BigDecimal.ZERO, BigDecimal::add)
+        : BigDecimal.ZERO;
   }
 }

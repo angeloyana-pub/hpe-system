@@ -1,10 +1,8 @@
 package com.pdmstudents.hpesystem.service;
 
 import com.pdmstudents.hpesystem.model.Order;
-import com.pdmstudents.hpesystem.model.OrderItem;
 import com.pdmstudents.hpesystem.repository.OrderRepository;
 import com.pdmstudents.hpesystem.repository.PartRepository;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,31 +40,21 @@ public class OrderService {
     return savedOrder;
   }
 
-  public Order updateOrder(Long id, Order updatedOrder) {
-    return repo.findById(id)
-        .map(
-            order -> {
-              if (updatedOrder.getPaymentAmount() != null) {
-                order.setPaymentAmount(updatedOrder.getPaymentAmount());
-              }
-              if (updatedOrder.getPaymentMethod() != null) {
-                order.setPaymentMethod(updatedOrder.getPaymentMethod());
-              }
-              if (updatedOrder.getOrderItems() != null) {
-                // TODO: update the corresponding part's stock.
-                List<OrderItem> orderItems = updatedOrder.getOrderItems();
-                orderItems.forEach(orderItem -> orderItem.setOrder(order));
-                order.setOrderItems(orderItems);
-              }
-              return repo.save(order);
-            })
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-  }
-
+  @Transactional
   public void deleteOrder(Long id) {
     repo.findById(id)
         .ifPresentOrElse(
-            repo::delete,
+            order -> {
+              order
+                  .getOrderItems()
+                  .forEach(
+                      item -> {
+                        var part = item.getPart();
+                        part.setStock(part.getStock() + item.getQuantity());
+                        partRepo.save(part);
+                      });
+              repo.delete(order);
+            },
             () -> {
               throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             });

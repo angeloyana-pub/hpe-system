@@ -33,12 +33,6 @@ public class OrderController {
     return new ApiResponse<>(200, savedOrder);
   }
 
-  @PatchMapping("/{id}")
-  public ApiResponse<Order> updateOrder(@PathVariable Long id, @RequestBody Order updatedOrder) {
-    Order order = service.updateOrder(id, updatedOrder);
-    return new ApiResponse<>(200, order);
-  }
-
   @DeleteMapping("/{id}")
   public ApiResponse<Object> deleteOrder(@PathVariable Long id) {
     service.deleteOrder(id);

@@ -21,12 +21,12 @@ export function getColumns({ setRowAction }) {
     },
     {
       accessorKey: 'quantity',
-      header: 'Quantity',
+      header: () => <div className="text-right font-medium">Quantity</div>,
       cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
     },
     {
       accessorKey: 'price',
-      header: 'Price',
+      header: () => <div className="text-right font-medium">Price</div>,
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),

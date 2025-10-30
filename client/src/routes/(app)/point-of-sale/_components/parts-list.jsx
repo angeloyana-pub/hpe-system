@@ -14,6 +14,7 @@ import {
   MultiSelectTrigger,
   MultiSelectValue,
 } from '@/components/ui/multi-select';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -122,7 +123,7 @@ export function PartsList() {
           </ButtonGroup>
         </ButtonGroup>
       </div>
-      <div className="flex-1 overflow-y-auto">
+      <ScrollArea className="flex-1 overflow-y-auto">
         <div className="grid gap-4 @sm:grid-cols-2 @lg:grid-cols-3">
           {parts.map((part) => {
             const cartItem = getCartItem(part.id);
@@ -169,7 +170,7 @@ export function PartsList() {
             );
           })}
         </div>
-      </div>
+      </ScrollArea>
       <div className="text-right text-muted-foreground">
         Page {page} of {pageCount}
       </div>

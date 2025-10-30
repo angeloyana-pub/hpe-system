@@ -9,3 +9,8 @@ export async function addOrder(payload) {
   const res = await client.post('/orders', payload);
   return res.data.data;
 }
+
+export async function deleteOrder(id) {
+  const res = await client.delete(`/orders/${id}`);
+  return res.data.data;
+}

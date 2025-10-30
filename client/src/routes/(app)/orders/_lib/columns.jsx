@@ -1,8 +1,17 @@
+import { MoreHorizontal } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { paymentMethods } from '@/data/payment-methods';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
-export function getColumns() {
+export function getColumns({ setRowAction }) {
   return [
     {
       accessorKey: 'id',
@@ -10,7 +19,7 @@ export function getColumns() {
     },
     {
       accessorKey: 'paymentAmount',
-      header: 'Payment Amount',
+      header: () => <div className="text-right font-medium">Payment Amount</div>,
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),
@@ -24,9 +33,44 @@ export function getColumns() {
       },
     },
     {
+      accessorKey: 'total',
+      header: () => <div className="text-right font-medium">Total</div>,
+      cell: ({ getValue }) => (
+        <div className="text-right font-medium">{formatCurrency(getValue())}</div>
+      ),
+    },
+    {
       accessorKey: 'createdAt',
       header: 'Created At',
       cell: ({ getValue }) => formatDate(getValue()),
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const handleViewOrderItems = () => {
+          setRowAction({ row, variant: 'viewOrderItems' });
+        };
+
+        const handleDelete = () => {
+          setRowAction({ row, variant: 'delete' });
+        };
+
+        return (
+          <div className="flex justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="data-[state=open]:bg-accent">
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleViewOrderItems}>View Order Items</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
     },
   ];
 }
