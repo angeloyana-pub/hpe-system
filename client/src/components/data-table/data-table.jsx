@@ -26,6 +26,7 @@ export function DataTable({ table, actionBar, children, className, ...props }) {
                     key={header.id}
                     colSpan={header.colSpan}
                     style={{
+                      '--background': 'var(--muted)',
                       ...getCommonPinningStyles({ column: header.column }),
                     }}
                   >

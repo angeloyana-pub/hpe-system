@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 
@@ -28,8 +29,9 @@ function Reports() {
 
   return (
     <SidebarInset>
-      <header className="p-4 sticky h-14 top-0 flex items-center z-2 bg-background border-b gap-2">
+      <header className="p-4 sticky h-14 top-0 flex items-center z-2 bg-background border-b">
         <SidebarTrigger />
+        <Separator orientation="vertical" className="ml-2 mr-4" />
         Reports
       </header>
       <div className="p-4 space-y-4">

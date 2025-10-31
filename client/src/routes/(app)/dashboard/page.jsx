@@ -2,6 +2,7 @@ import { PhilippinePeso, ShoppingCart, TrendingDown } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import {
   Table,
@@ -21,15 +22,16 @@ function Dashboard() {
 
   return (
     <SidebarInset>
-      <header className="p-4 sticky h-14 top-0 flex items-center z-2 bg-background border-b gap-2">
+      <header className="p-4 sticky h-14 top-0 flex items-center z-2 bg-background border-b">
         <SidebarTrigger />
+        <Separator orientation="vertical" className="ml-2 mr-4" />
         Dashboard
       </header>
       <div className="p-4 space-y-4 @container">
         <div className="grid gap-4 @sm:grid-cols-2">
           <Card className="gap-0">
             <CardHeader className="flex justify-between">
-              <CardTitle>Total Sales</CardTitle>
+              <CardTitle className="text-muted-foreground font-normal">Total Sales</CardTitle>
               <PhilippinePeso />
             </CardHeader>
             <CardContent>
@@ -38,7 +40,7 @@ function Dashboard() {
           </Card>
           <Card className="gap-0">
             <CardHeader className="flex justify-between">
-              <CardTitle>Total Orders</CardTitle>
+              <CardTitle className="text-muted-foreground font-normal">Total Orders</CardTitle>
               <ShoppingCart />
             </CardHeader>
             <CardContent>
@@ -55,36 +57,51 @@ function Dashboard() {
             <TrendingDown />
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Size</TableHead>
-                  <TableHead>Tags</TableHead>
-                  <TableHead className="text-right">Stock</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {lowStockParts.map((part) => (
+            <div className="border rounded-md overflow-auto">
+              <Table>
+                <TableHeader className="bg-muted">
                   <TableRow>
-                    <TableCell>{part.name}</TableCell>
-                    <TableCell>{part.size}</TableCell>
-                    <TableCell>
-                      {part.tags.length > 0 ? (
-                        <div className="flex gap-2">
-                          {part.tags.map((tag) => (
-                            <Badge variant="outline">{tag.name}</Badge>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-muted-foreground italic">N/A</div>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right font-medium">{part.stock}</TableCell>
+                    <TableHead>Part</TableHead>
+                    <TableHead>Tags</TableHead>
+                    <TableHead className="text-right">Price</TableHead>
+                    <TableHead className="text-right">Stock</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {lowStockParts.length > 0 ? (
+                    lowStockParts.map((part) => (
+                      <TableRow>
+                        <TableCell>
+                          <div>{part.name}</div>
+                          <div className="text-muted-foreground text-sm">{part.size}</div>
+                        </TableCell>
+                        <TableCell>
+                          {part.tags.length > 0 ? (
+                            <div className="flex gap-2">
+                              {part.tags.map((tag) => (
+                                <Badge variant="outline">{tag.name}</Badge>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="text-muted-foreground italic">N/A</div>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right font-bold">
+                          {formatCurrency(part.price)}
+                        </TableCell>
+                        <TableCell className="text-right font-medium">{part.stock}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan="4" className="h-24 text-center">
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
