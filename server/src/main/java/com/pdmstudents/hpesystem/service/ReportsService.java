@@ -1,6 +1,7 @@
 package com.pdmstudents.hpesystem.service;
 
 import com.pdmstudents.hpesystem.repository.OrderRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,12 @@ public class ReportsService {
     this.orderRepo = orderRepo;
   }
 
-  public List<Map<String, Object>> getSalesReport(String interval) {
+  public List<Map<String, Object>> getSalesReport(
+      LocalDateTime from, LocalDateTime to, String interval) {
     List<Object[]> salesReport =
         switch (interval) {
-          case "year" -> orderRepo.getYearlySales();
-          default -> orderRepo.getMonthlySales();
+          case "year" -> orderRepo.getYearlySales(from, to);
+          default -> orderRepo.getMonthlySales(from, to);
         };
 
     return salesReport.stream()

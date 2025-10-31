@@ -1,4 +1,4 @@
-import { useQueryState } from 'nuqs';
+import { parseAsStringLiteral, useQueryState } from 'nuqs';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +16,10 @@ const chartConfig = {
 
 export function SalesChart() {
   const { data } = useSalesReport();
-  const [interval, setInterval] = useQueryState('salesInterval', { defaultValue: 'month' });
+  const [interval, setInterval] = useQueryState(
+    'salesInterval',
+    parseAsStringLiteral(['month', 'year']).withDefault('month')
+  );
 
   return (
     <Card>

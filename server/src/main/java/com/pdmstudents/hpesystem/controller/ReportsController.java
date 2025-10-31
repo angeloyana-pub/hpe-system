@@ -2,6 +2,7 @@ package com.pdmstudents.hpesystem.controller;
 
 import com.pdmstudents.hpesystem.dto.ApiResponse;
 import com.pdmstudents.hpesystem.service.ReportsService;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,14 @@ public class ReportsController {
 
   @GetMapping("/sales")
   public ApiResponse<List<Map<String, Object>>> getSalesReport(
+      @RequestParam(required = false) OffsetDateTime from,
+      @RequestParam(required = false) OffsetDateTime to,
       @RequestParam(defaultValue = "month") String interval) {
-    List<Map<String, Object>> salesReport = service.getSalesReport(interval);
+    List<Map<String, Object>> salesReport =
+        service.getSalesReport(
+            from != null ? from.toLocalDateTime() : null,
+            to != null ? to.toLocalDateTime() : null,
+            interval);
     return new ApiResponse<>(200, salesReport);
   }
 }
