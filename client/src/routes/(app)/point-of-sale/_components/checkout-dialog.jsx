@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader } from 'lucide-react';
+import { Loader, PhilippinePeso } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { paymentMethods } from '@/data/payment-methods';
 import { useAddOrder } from '@/features/orders/mutations';
@@ -88,17 +88,22 @@ export function CheckoutDialog(props) {
                   <FormItem>
                     <FormLabel>Payment</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        inputMode="numeric"
-                        placeholder="Payment amount"
-                        {...field}
-                        value={field.value ?? ''}
-                        onChange={(e) => {
-                          const value = e.target.valueAsNumber;
-                          field.onChange(!isNaN(value) ? value : undefined);
-                        }}
-                      />
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <PhilippinePeso />
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="number"
+                          inputMode="numeric"
+                          placeholder="0.00"
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={(e) => {
+                            const value = e.target.valueAsNumber;
+                            field.onChange(!isNaN(value) ? value : undefined);
+                          }}
+                        />
+                      </InputGroup>
                     </FormControl>
                     <FormDescription>
                       Change:{' '}

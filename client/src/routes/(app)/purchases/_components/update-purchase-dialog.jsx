@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader } from 'lucide-react';
+import { Loader, PhilippinePeso } from 'lucide-react';
 import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import {
   Select,
   SelectContent,
@@ -134,17 +135,22 @@ export function UpdatePurchaseDialog({ purchase, ...props }) {
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      inputMode="decimal"
-                      placeholder="Price"
-                      {...field}
-                      value={String(field.value ?? '')}
-                      onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        field.onChange(!isNaN(value) ? value : undefined);
-                      }}
-                    />
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <PhilippinePeso />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type="number"
+                        inputMode="decimal"
+                        placeholder="Price"
+                        {...field}
+                        value={String(field.value ?? '')}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value);
+                          field.onChange(!isNaN(value) ? value : undefined);
+                        }}
+                      />
+                    </InputGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

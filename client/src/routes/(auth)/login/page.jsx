@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Loader } from 'lucide-react';
-import { useTransition } from 'react';
+import { Eye, EyeOff, Loader } from 'lucide-react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useAuth } from '@/auth/context';
@@ -16,11 +16,18 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group';
 
 import { loginSchema } from './_lib/validators';
 
 function Login() {
   const [isLoginPending, startLoginTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
 
   const form = useForm({
@@ -78,12 +85,22 @@ function Login() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                        value={field.value ?? ''}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Password"
+                          {...field}
+                          value={field.value ?? ''}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            size="icon-xs"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                          >
+                            {showPassword ? <Eye /> : <EyeOff />}
+                          </InputGroupButton>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

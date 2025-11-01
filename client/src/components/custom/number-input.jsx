@@ -1,9 +1,12 @@
 import { Minus, Plus } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group';
 
 export function NumberInput({
   value = 0,
@@ -12,7 +15,6 @@ export function NumberInput({
   max,
   step = 1,
   disabled = false,
-  size,
   className,
 }) {
   const [internalValue, setInternalValue] = useState(value);
@@ -46,25 +48,19 @@ export function NumberInput({
   };
 
   return (
-    <div
-      className={cn(
-        'flex h-9 w-full items-center rounded-md border shadow-xs',
-        size === 'sm' && 'h-8',
-        className
-      )}
-    >
-      <Button
-        aria-label="decrement"
-        type="button"
-        variant="ghost"
-        className={cn('h-full w-9 shrink-0 rounded-r-none bg-transparent', size === 'sm' && 'w-8')}
-        onClick={handleDecrement}
-        disabled={disabled || (min !== undefined && currentValue <= min)}
-      >
-        <Minus className="h-4 w-4" />
-      </Button>
-
-      <Input
+    <InputGroup className={className}>
+      <InputGroupAddon>
+        <InputGroupButton
+          aria-label="decrement"
+          type="button"
+          size="icon-xs"
+          onClick={handleDecrement}
+          disabled={disabled || (min !== undefined && currentValue <= min)}
+        >
+          <Minus />
+        </InputGroupButton>
+      </InputGroupAddon>
+      <InputGroupInput
         type="number"
         inputMode="numeric"
         value={currentValue}
@@ -73,20 +69,19 @@ export function NumberInput({
         min={min}
         max={max}
         step={step}
-        className="[appearance:textfield] rounded-none border-0 px-0 text-center shadow-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        className="text-center"
       />
-
-      <Button
-        aria-label="increment"
-        type="button"
-        variant="ghost"
-        size={size === 'sm' ? 'sm' : 'icon'}
-        className={cn('h-full w-9 shrink-0 rounded-l-none bg-transparent', size === 'sm' && 'w-8')}
-        onClick={handleIncrement}
-        disabled={disabled || (max !== undefined && currentValue >= max)}
-      >
-        <Plus className="h-4 w-4" />
-      </Button>
-    </div>
+      <InputGroupAddon align="inline-end">
+        <InputGroupButton
+          aria-label="increment"
+          type="button"
+          size="icon-xs"
+          onClick={handleIncrement}
+          disabled={disabled || (max !== undefined && currentValue >= max)}
+        >
+          <Plus />
+        </InputGroupButton>
+      </InputGroupAddon>
+    </InputGroup>
   );
 }

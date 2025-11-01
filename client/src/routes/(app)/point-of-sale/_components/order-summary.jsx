@@ -34,7 +34,6 @@ export function OrderSummary() {
                 onChange={(val) => setQuantity(id, val)}
                 min={0}
                 max={part.stock}
-                size="sm"
                 className="ml-auto w-[100px] min-w-[100px]"
               />
             </div>

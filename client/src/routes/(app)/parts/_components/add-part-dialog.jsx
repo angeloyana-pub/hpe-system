@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader, Plus } from 'lucide-react';
+import { Loader, PhilippinePeso, Plus } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import {
   MultiSelect,
   MultiSelectContent,
@@ -155,17 +156,22 @@ export function AddPartDialog() {
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      inputMode="decimal"
-                      placeholder="Price"
-                      {...field}
-                      value={String(field.value ?? '')}
-                      onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        field.onChange(!isNaN(value) ? value : undefined);
-                      }}
-                    />
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <PhilippinePeso />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type="number"
+                        inputMode="decimal"
+                        placeholder="0.00"
+                        {...field}
+                        value={String(field.value ?? '')}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value);
+                          field.onChange(!isNaN(value) ? value : undefined);
+                        }}
+                      />
+                    </InputGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
