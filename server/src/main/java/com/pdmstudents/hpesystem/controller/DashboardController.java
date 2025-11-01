@@ -24,14 +24,14 @@ public class DashboardController {
   }
 
   @GetMapping("/total-sales")
-  public ApiResponse<Map<String, Object>> getTotalRevenue() {
-    BigDecimal totalSales = service.getTotalSales();
-    return new ApiResponse<>(200, Map.of("totalSales", totalSales));
+  public ApiResponse<Map<String, BigDecimal>> getTotalRevenue() {
+    var totalSales = service.getTotalSales();
+    return new ApiResponse<>(200, totalSales);
   }
 
   @GetMapping("/total-orders")
-  public ApiResponse<Map<String, Object>> getTotalOrders() {
-    int totalOrders = service.getTotalOrders();
-    return new ApiResponse<>(200, Map.of("totalOrders", totalOrders));
+  public ApiResponse<Map<String, Integer>> getTotalOrders() {
+    var totalOrders = service.getTotalOrders();
+    return new ApiResponse<>(200, totalOrders);
   }
 }

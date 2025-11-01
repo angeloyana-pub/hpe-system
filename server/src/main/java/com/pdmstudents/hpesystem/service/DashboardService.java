@@ -1,23 +1,20 @@
 package com.pdmstudents.hpesystem.service;
 
 import com.pdmstudents.hpesystem.model.Part;
-import com.pdmstudents.hpesystem.repository.OrderItemRepository;
 import com.pdmstudents.hpesystem.repository.OrderRepository;
 import com.pdmstudents.hpesystem.repository.PartRepository;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DashboardService {
   private final PartRepository partRepo;
-  private final OrderItemRepository orderItemRepo;
   private final OrderRepository orderRepo;
 
-  public DashboardService(
-      PartRepository partRepo, OrderItemRepository orderItemRepo, OrderRepository orderRepo) {
+  public DashboardService(PartRepository partRepo, OrderRepository orderRepo) {
     this.partRepo = partRepo;
-    this.orderItemRepo = orderItemRepo;
     this.orderRepo = orderRepo;
   }
 
@@ -25,11 +22,17 @@ public class DashboardService {
     return partRepo.getLowStockParts();
   }
 
-  public BigDecimal getTotalSales() {
-    return orderItemRepo.getTotalSales();
+  public Map<String, BigDecimal> getTotalSales() {
+    BigDecimal[] totalSales = orderRepo.getTotalSales().get(0);
+    return Map.of(
+        "currentTotalSales", totalSales[0],
+        "previousTotalSales", totalSales[1]);
   }
 
-  public int getTotalOrders() {
-    return orderRepo.getTotalOrders();
+  public Map<String, Integer> getTotalOrders() {
+    Integer[] totalOrders = orderRepo.getTotalOrders().get(0);
+    return Map.of(
+        "currentTotalOrders", totalOrders[0],
+        "previousTotalOrders", totalOrders[1]);
   }
 }

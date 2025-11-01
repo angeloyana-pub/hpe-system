@@ -16,9 +16,15 @@ import { useLowStockParts, useTotalOrders, useTotalSales } from '@/features/dash
 import { formatCurrency } from '@/lib/utils';
 
 function Dashboard() {
-  const { data: totalSales = { totalSales: 0 } } = useTotalSales();
-  const { data: totalOrders = { totalOrders: 0 } } = useTotalOrders();
+  const { data: totalSales = { currentTotalSales: 0, previousTotalSales: 0 } } = useTotalSales();
+  const { data: totalOrders = { currentTotalOrders: 0, previousTotalOrders: 0 } } =
+    useTotalOrders();
   const { data: lowStockParts = [] } = useLowStockParts();
+
+  const { currentTotalSales, previousTotalSales } = totalSales;
+  const { currentTotalOrders, previousTotalOrders } = totalOrders;
+  const salesGrowth = ((currentTotalSales - previousTotalSales) / previousTotalSales) * 100;
+  const ordersGrowth = ((currentTotalOrders - previousTotalOrders) / previousTotalOrders) * 100;
 
   return (
     <SidebarInset>
@@ -35,7 +41,12 @@ function Dashboard() {
               <PhilippinePeso />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-medium">{formatCurrency(totalSales.totalSales)}</div>
+              <div className="text-3xl font-medium">{formatCurrency(currentTotalSales)}</div>
+              <div className="text-muted-foreground">
+                {previousTotalSales === 0
+                  ? '-- --'
+                  : `${salesGrowth >= 0 ? '+' : ''}${salesGrowth.toFixed(1)}% from last month`}
+              </div>
             </CardContent>
           </Card>
           <Card className="gap-0">
@@ -44,7 +55,12 @@ function Dashboard() {
               <ShoppingCart />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-medium">+{totalOrders.totalOrders}</div>
+              <div className="text-3xl font-medium">+{currentTotalOrders}</div>
+              <div className="text-muted-foreground">
+                {previousTotalOrders === 0
+                  ? '-- --'
+                  : `${ordersGrowth >= 0 ? '+' : ''}${ordersGrowth.toFixed(1)}% from last month`}
+              </div>
             </CardContent>
           </Card>
         </div>

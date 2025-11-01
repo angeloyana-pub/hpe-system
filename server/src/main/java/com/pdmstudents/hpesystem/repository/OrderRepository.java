@@ -1,6 +1,7 @@
 package com.pdmstudents.hpesystem.repository;
 
 import com.pdmstudents.hpesystem.model.Order;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -12,9 +13,6 @@ import org.springframework.data.repository.query.Param;
 public interface OrderRepository extends JpaRepository<Order, Long> {
   @Query("SELECT o FROM Order o")
   Page<Order> getOrders(Pageable pageable);
-
-  @Query("SELECT COUNT(o) FROM Order o")
-  int getTotalOrders();
 
   @Query(
       value =
@@ -48,4 +46,41 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
   """,
       nativeQuery = true)
   List<Object[]> getYearlySales(@Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
+
+  @Query(
+      value =
+          """
+    SELECT
+      SUM(
+        CASE WHEN DATE_FORMAT(o.created_at, '%Y-%m') = DATE_FORMAT(CURRENT_DATE, '%Y-%m')
+          THEN COALESCE(oi.price * oi.quantity, 0)
+          ELSE 0
+        END
+      ) AS current_total_sales,
+      SUM(
+        CASE WHEN DATE_FORMAT(o.created_at, '%Y-%m') = DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH), '%Y-%m')
+          THEN COALESCE(oi.price * oi.quantity, 0)
+          ELSE 0
+        END
+      ) AS previous_total_sales
+    FROM orders o
+    LEFT JOIN order_items oi ON oi.order_id = o.id
+  """,
+      nativeQuery = true)
+  List<BigDecimal[]> getTotalSales();
+
+  @Query(
+      value =
+          """
+    SELECT
+      SUM(
+        IF(DATE_FORMAT(o.created_at, '%Y-%m') = DATE_FORMAT(CURRENT_DATE, '%Y-%m'), 1, 0)
+      ) AS current_total_orders,
+      SUM(
+        IF(DATE_FORMAT(o.created_at, '%Y-%m') = DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH), '%Y-%m'), 1, 0)
+      ) AS previous_total_orders
+    FROM orders o
+  """,
+      nativeQuery = true)
+  List<Integer[]> getTotalOrders();
 }
