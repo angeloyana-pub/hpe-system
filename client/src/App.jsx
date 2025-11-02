@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 
 import { Toaster } from '@/components/ui/sonner';
 
@@ -27,6 +27,7 @@ function App() {
         <BrowserRouter>
           <AuthProvider>
             <Routes>
+              <Route index element={<Navigate to="/dashboard" />} />
               <Route path="/login" element={<Login />} />
               <Route element={<ProtectedRoute />}>
                 <Route element={<AppLayout />}>
