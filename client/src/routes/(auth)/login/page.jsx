@@ -4,6 +4,7 @@ import { Eye, EyeOff, Loader } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
+import logo from '@/assets/logo.png';
 import { useAuth } from '@/auth/context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -58,9 +59,10 @@ function Login() {
   return (
     <div className="h-svh p-4 flex items-center justify-center">
       <Card className="w-full sm:w-[300px]">
-        <CardHeader className="justify-center text-center">
-          <CardTitle>Welcome!</CardTitle>
-          <CardDescription>Please enter your account</CardDescription>
+        <CardHeader className="place-items-center">
+          <img src={logo} alt="logo" className="size-12" />
+          <CardTitle className="text-2xl">Welcome to Hydro-Pro!</CardTitle>
+          <CardDescription>Enter your account to login</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
