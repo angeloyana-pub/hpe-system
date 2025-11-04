@@ -44,6 +44,7 @@ export default defineConfig([
     rules: {
       'react/jsx-uses-react': 'off',
       'react/jsx-uses-vars': 'error',
+      'react/jsx-key': 'warn'
     },
   },
   {

@@ -96,7 +96,7 @@ export function UpdatePurchaseDialog({ purchase, ...props }) {
                     </FormControl>
                     <SelectContent>
                       {partsData.map((part) => (
-                        <SelectItem key={part.name} value={String(part.id)}>
+                        <SelectItem key={part.id} value={String(part.id)}>
                           {part.name}
                         </SelectItem>
                       ))}
@@ -173,7 +173,7 @@ export function UpdatePurchaseDialog({ purchase, ...props }) {
                     </FormControl>
                     <SelectContent>
                       {suppliersData.map((supplier) => (
-                        <SelectItem key={supplier.name} value={String(supplier.id)}>
+                        <SelectItem key={supplier.id} value={String(supplier.id)}>
                           {supplier.name}
                         </SelectItem>
                       ))}

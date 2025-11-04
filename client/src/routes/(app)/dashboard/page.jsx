@@ -86,7 +86,7 @@ function Dashboard() {
                 <TableBody>
                   {lowStockParts.length > 0 ? (
                     lowStockParts.map((part) => (
-                      <TableRow>
+                      <TableRow key={part.id}>
                         <TableCell>
                           <div>{part.name}</div>
                           <div className="text-muted-foreground text-sm">{part.size}</div>
@@ -95,7 +95,7 @@ function Dashboard() {
                           {part.tags.length > 0 ? (
                             <div className="flex gap-2">
                               {part.tags.map((tag) => (
-                                <Badge variant="outline">{tag.name}</Badge>
+                                <Badge key={tag.id} variant="outline">{tag.name}</Badge>
                               ))}
                             </div>
                           ) : (
