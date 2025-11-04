@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -29,6 +30,7 @@ public class PurchaseService {
     return repo.getPurchases(pageable);
   }
 
+  @Transactional
   public Purchase createPurchase(Purchase purchase) {
     if (purchase.getSupplier() != null) {
       supplierRepo
@@ -50,10 +52,14 @@ public class PurchaseService {
     return repo.save(purchase);
   }
 
+  @Transactional
   public Purchase updatePurchase(Long id, Purchase updatedPurchase) {
     return repo.findById(id)
         .map(
             purchase -> {
+              int prevQuantity = purchase.getQuantity();
+              var prevPart = purchase.getPart();
+
               if (updatedPurchase.getQuantity() != null) {
                 purchase.setQuantity(updatedPurchase.getQuantity());
               }
@@ -73,7 +79,13 @@ public class PurchaseService {
                     .findById(updatedPurchase.getPart().getId())
                     .ifPresent(
                         part -> {
-                          purchase.setPart(part);
+                          if (!part.equals(prevPart)) {
+                            prevPart.setStock(prevPart.getStock() - prevQuantity);
+                            part.setStock(part.getStock() + updatedPurchase.getQuantity());
+                          } else if (updatedPurchase.getQuantity() != null) {
+                            part.setStock(
+                                part.getStock() - prevQuantity + updatedPurchase.getQuantity());
+                          }
                         });
               }
               return repo.save(purchase);
@@ -81,10 +93,14 @@ public class PurchaseService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
   }
 
+  @Transactional
   public void deletePurchase(Long id) {
     repo.findById(id)
         .ifPresentOrElse(
-            repo::delete,
+            purchase -> {
+              var part = purchase.getPart();
+              part.setStock(part.getStock() - purchase.getQuantity());
+            },
             () -> {
               throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             });

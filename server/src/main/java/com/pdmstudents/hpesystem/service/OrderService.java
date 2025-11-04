@@ -51,7 +51,6 @@ public class OrderService {
                       item -> {
                         var part = item.getPart();
                         part.setStock(part.getStock() + item.getQuantity());
-                        partRepo.save(part);
                       });
               repo.delete(order);
             },
