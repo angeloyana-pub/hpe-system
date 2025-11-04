@@ -2,7 +2,9 @@ package com.pdmstudents.hpesystem.service;
 
 import com.pdmstudents.hpesystem.model.Part;
 import com.pdmstudents.hpesystem.repository.PartRepository;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -62,11 +64,19 @@ public class PartService {
   }
 
   public void deletePart(Long id) {
-    repo.findById(id)
-        .ifPresentOrElse(
-            repo::delete,
-            () -> {
-              throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            });
+    try {
+      repo.findById(id)
+          .ifPresentOrElse(
+              repo::delete,
+              () -> {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+              });
+    } catch (DataIntegrityViolationException ex) {
+      if (ex.getRootCause() instanceof SQLIntegrityConstraintViolationException) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT);
+      } else {
+        throw ex;
+      }
+    }
   }
 }

@@ -1,4 +1,6 @@
+import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
@@ -10,7 +12,13 @@ import { UpdateTagDialog } from './_components/update-tag-dialog';
 import { getColumns } from './_lib/columns';
 
 function Tags() {
-  const deleteTag = useDeleteTag();
+  const deleteTag = useDeleteTag({
+    onError: (err) => {
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
+        toast.error('This record can’t be deleted because it’s linked to other records.');
+      }
+    },
+  });
   const { data = { tags: [], pageCount: 0 } } = useTags();
 
   const [rowAction, setRowAction] = useState(null);

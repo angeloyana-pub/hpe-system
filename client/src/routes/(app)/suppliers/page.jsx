@@ -1,4 +1,6 @@
+import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
@@ -10,7 +12,13 @@ import { UpdateSupplierDialog } from './_components/update-supplier-dialog';
 import { getColumns } from './_lib/columns';
 
 function Suppliers() {
-  const deleteSupplier = useDeleteSupplier();
+  const deleteSupplier = useDeleteSupplier({
+    onError: (err) => {
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
+        toast.error('This record can’t be deleted because it’s linked to other records.');
+      }
+    },
+  });
   const { data = { suppliers: [], pageCount: 0 } } = useSuppliers();
 
   const [rowAction, setRowAction] = useState(null);
