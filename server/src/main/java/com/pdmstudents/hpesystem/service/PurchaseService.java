@@ -100,6 +100,7 @@ public class PurchaseService {
             purchase -> {
               var part = purchase.getPart();
               part.setStock(part.getStock() - purchase.getQuantity());
+              repo.delete(purchase);
             },
             () -> {
               throw new ResponseStatusException(HttpStatus.NOT_FOUND);
