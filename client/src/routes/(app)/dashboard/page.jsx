@@ -95,7 +95,9 @@ function Dashboard() {
                           {part.tags.length > 0 ? (
                             <div className="flex gap-2">
                               {part.tags.map((tag) => (
-                                <Badge key={tag.id} variant="outline">{tag.name}</Badge>
+                                <Badge key={tag.id} variant="outline">
+                                  {tag.name}
+                                </Badge>
                               ))}
                             </div>
                           ) : (

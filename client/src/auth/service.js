@@ -21,3 +21,7 @@ export async function login(data) {
 export async function logout() {
   await client.post('/auth/logout');
 }
+
+export async function changePassword(data) {
+  await client.patch('/auth/change-password', data);
+}

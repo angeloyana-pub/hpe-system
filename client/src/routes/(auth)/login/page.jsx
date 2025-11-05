@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Eye, EyeOff, Loader } from 'lucide-react';
-import { useState, useTransition } from 'react';
+import { Loader } from 'lucide-react';
+import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
 import logo from '@/assets/logo.png';
 import { useAuth } from '@/auth/context';
+import { PasswordInput } from '@/components/custom/password-input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -17,18 +18,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from '@/components/ui/input-group';
 
 import { loginSchema } from './_lib/validators';
 
 function Login() {
   const [isLoginPending, startLoginTransition] = useTransition();
-  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
 
   const form = useForm({
@@ -87,22 +81,7 @@ function Login() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <InputGroup>
-                        <InputGroupInput
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Password"
-                          {...field}
-                          value={field.value ?? ''}
-                        />
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupButton
-                            size="icon-xs"
-                            onClick={() => setShowPassword((prev) => !prev)}
-                          >
-                            {showPassword ? <Eye /> : <EyeOff />}
-                          </InputGroupButton>
-                        </InputGroupAddon>
-                      </InputGroup>
+                      <PasswordInput placeholder="Password" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -1,4 +1,4 @@
-import { LogOut } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { Link } from 'react-router';
 import { toast } from 'sonner';
 
@@ -112,6 +112,12 @@ export function AppSidebar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/settings">
+                    <Settings />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut />
                   Log Out

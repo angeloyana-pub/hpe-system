@@ -13,6 +13,7 @@ import Parts from './routes/(app)/parts/page';
 import PointOfSale from './routes/(app)/point-of-sale/page';
 import Purchases from './routes/(app)/purchases/page';
 import Reports from './routes/(app)/reports/page';
+import Settings from './routes/(app)/settings/page';
 import Suppliers from './routes/(app)/suppliers/page';
 import Tags from './routes/(app)/tags/page';
 import Login from './routes/(auth)/login/page';
@@ -39,6 +40,7 @@ function App() {
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/point-of-sale" element={<PointOfSale />} />
                   <Route path="/reports" element={<Reports />} />
+                  <Route path="/settings" element={<Settings />} />
                 </Route>
               </Route>
             </Routes>

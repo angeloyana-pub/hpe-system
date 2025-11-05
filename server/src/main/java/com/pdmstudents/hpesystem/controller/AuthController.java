@@ -1,6 +1,7 @@
 package com.pdmstudents.hpesystem.controller;
 
 import com.pdmstudents.hpesystem.dto.ApiResponse;
+import com.pdmstudents.hpesystem.dto.ChangePasswordDTO;
 import com.pdmstudents.hpesystem.model.User;
 import com.pdmstudents.hpesystem.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,5 +33,14 @@ public class AuthController {
   @GetMapping("/me")
   public ApiResponse<User> me(HttpServletRequest request) {
     return new ApiResponse<>(200, (User) request.getAttribute("user"));
+  }
+
+  @PatchMapping("/change-password")
+  public ApiResponse<Object> changePassword(
+      HttpServletRequest request, HttpSession session, @RequestBody ChangePasswordDTO payload) {
+    // TODO: invalidate session if user entered wrong oldPassword multiple times.
+    service.changePassword((User) request.getAttribute("user"), payload);
+    session.removeAttribute("userId");
+    return new ApiResponse<>(200, null);
   }
 }

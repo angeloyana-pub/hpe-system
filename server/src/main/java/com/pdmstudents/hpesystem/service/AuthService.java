@@ -1,5 +1,6 @@
 package com.pdmstudents.hpesystem.service;
 
+import com.pdmstudents.hpesystem.dto.ChangePasswordDTO;
 import com.pdmstudents.hpesystem.model.User;
 import com.pdmstudents.hpesystem.repository.UserRepository;
 import java.util.Optional;
@@ -32,5 +33,14 @@ public class AuthService {
 
   public Optional<User> getUser(Long id) {
     return userRepo.findById(id);
+  }
+
+  public void changePassword(User user, ChangePasswordDTO passwords) {
+    if (!passwordEncoder.matches(passwords.getOldPassword(), user.getPassword())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+
+    user.setPassword(passwordEncoder.encode(passwords.getNewPassword()));
+    userRepo.save(user);
   }
 }
