@@ -16,6 +16,9 @@ export function getColumns({ setRowAction }) {
     {
       accessorKey: 'id',
       header: 'Order ID',
+      meta: {
+        label: 'Order ID',
+      },
     },
     {
       accessorKey: 'paymentAmount',
@@ -23,6 +26,9 @@ export function getColumns({ setRowAction }) {
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),
+      meta: {
+        label: 'Payment Amount',
+      },
     },
     {
       accessorKey: 'paymentMethod',
@@ -31,6 +37,9 @@ export function getColumns({ setRowAction }) {
         const paymentMethod = paymentMethods.find((pm) => pm.value === getValue());
         return <Badge variant="outline">{paymentMethod?.label}</Badge>;
       },
+      meta: {
+        label: 'Payment Method',
+      },
     },
     {
       accessorKey: 'total',
@@ -38,11 +47,17 @@ export function getColumns({ setRowAction }) {
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),
+      meta: {
+        label: 'Total',
+      },
     },
     {
       accessorKey: 'createdAt',
       header: 'Created At',
       cell: ({ getValue }) => formatDate(getValue()),
+      meta: {
+        label: 'Created At',
+      },
     },
     {
       id: 'actions',

@@ -14,15 +14,24 @@ export function getColumns({ setRowAction }) {
     {
       accessorKey: 'id',
       header: 'Purchase ID',
+      meta: {
+        label: 'Purchase ID',
+      },
     },
     {
       accessorKey: 'part.name',
       header: 'Part',
+      meta: {
+        label: 'Part',
+      },
     },
     {
       accessorKey: 'quantity',
       header: () => <div className="text-right font-medium">Quantity</div>,
       cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
+      meta: {
+        label: 'Quantity',
+      },
     },
     {
       accessorKey: 'price',
@@ -30,15 +39,24 @@ export function getColumns({ setRowAction }) {
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),
+      meta: {
+        label: 'Price',
+      },
     },
     {
       accessorKey: 'createdAt',
       header: 'Created At',
       cell: ({ getValue }) => formatDate(getValue()),
+      meta: {
+        label: 'Created At',
+      },
     },
     {
       accessorKey: 'supplier.name',
       header: 'Supplier',
+      meta: {
+        label: 'Supplier',
+      },
     },
     {
       id: 'actions',

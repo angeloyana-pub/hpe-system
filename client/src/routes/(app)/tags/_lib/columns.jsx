@@ -13,6 +13,9 @@ export function getColumns({ setRowAction }) {
     {
       accessorKey: 'id',
       header: 'Tag ID',
+      meta: {
+        label: 'Tag ID',
+      },
     },
     {
       id: 'name',
@@ -20,6 +23,7 @@ export function getColumns({ setRowAction }) {
       header: 'Name',
       enableColumnFilter: true,
       meta: {
+        label: 'Name',
         placeholder: 'Search names...',
         variant: 'text',
       },

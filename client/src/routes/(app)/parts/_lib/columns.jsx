@@ -15,13 +15,18 @@ export function getColumns({ setRowAction, tags }) {
     {
       accessorKey: 'id',
       header: 'Part ID',
+      meta: {
+        label: 'Part ID',
+      },
     },
+
     {
       id: 'name',
       accessorKey: 'name',
       header: 'Name',
       enableColumnFilter: true,
       meta: {
+        label: 'Name',
         placeholder: 'Search names...',
         variant: 'text',
       },
@@ -29,16 +34,25 @@ export function getColumns({ setRowAction, tags }) {
     {
       accessorKey: 'size',
       header: 'Size',
+      meta: {
+        label: 'Size',
+      },
     },
     {
       accessorKey: 'stock',
       header: () => <div className="text-right font-medium">Stock</div>,
       cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
+      meta: {
+        label: 'Stock',
+      },
     },
     {
       accessorKey: 'lowStockThreshold',
       header: () => <div className="text-right font-medium">Low Stock Threshold</div>,
       cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
+      meta: {
+        label: 'Low Stock Threshold',
+      },
     },
     {
       accessorKey: 'price',
@@ -46,6 +60,9 @@ export function getColumns({ setRowAction, tags }) {
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),
+      meta: {
+        label: 'Price',
+      },
     },
     {
       id: 'tagIds',

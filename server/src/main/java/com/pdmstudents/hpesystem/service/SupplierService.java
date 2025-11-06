@@ -40,6 +40,15 @@ public class SupplierService {
               if (updatedSupplier.getName() != null) {
                 supplier.setName(updatedSupplier.getName());
               }
+              if (updatedSupplier.getPhone() != null) {
+                supplier.setPhone(updatedSupplier.getPhone());
+              }
+              if (updatedSupplier.getEmail() != null) {
+                supplier.setEmail(updatedSupplier.getEmail());
+              }
+              if (updatedSupplier.getAddress() != null) {
+                supplier.setAddress(updatedSupplier.getAddress());
+              }
               return repo.save(supplier);
             })
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

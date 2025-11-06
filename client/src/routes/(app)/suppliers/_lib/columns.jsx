@@ -13,6 +13,9 @@ export function getColumns({ setRowAction }) {
     {
       accessorKey: 'id',
       header: 'Supplier ID',
+      meta: {
+        label: 'Supplier ID',
+      },
     },
     {
       id: 'name',
@@ -20,8 +23,30 @@ export function getColumns({ setRowAction }) {
       header: 'Name',
       enableColumnFilter: true,
       meta: {
+        label: 'Name',
         placeholder: 'Search names...',
         variant: 'text',
+      },
+    },
+    {
+      accessorKey: 'phone',
+      header: 'Phone Number',
+      meta: {
+        label: 'Phone Number',
+      },
+    },
+    {
+      accessorKey: 'email',
+      header: 'Email',
+      meta: {
+        label: 'Email',
+      },
+    },
+    {
+      accessorKey: 'address',
+      header: 'Address',
+      meta: {
+        label: 'Address',
       },
     },
     {
