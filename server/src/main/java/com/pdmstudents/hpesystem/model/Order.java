@@ -6,10 +6,16 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "orders")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Getter
+@Setter
+@ToString
 public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,46 +39,6 @@ public class Order {
     if (createdAt == null) {
       createdAt = LocalDateTime.now();
     }
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public BigDecimal getPaymentAmount() {
-    return paymentAmount;
-  }
-
-  public void setPaymentAmount(BigDecimal paymentAmount) {
-    this.paymentAmount = paymentAmount;
-  }
-
-  public String getPaymentMethod() {
-    return paymentMethod;
-  }
-
-  public void setPaymentMethod(String paymentMethod) {
-    this.paymentMethod = paymentMethod;
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public List<OrderItem> getOrderItems() {
-    return orderItems;
-  }
-
-  public void setOrderItems(List<OrderItem> orderItems) {
-    this.orderItems = orderItems;
   }
 
   public BigDecimal getTotal() {
