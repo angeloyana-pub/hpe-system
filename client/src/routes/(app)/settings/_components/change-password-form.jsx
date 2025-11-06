@@ -52,7 +52,7 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="grid gap-2">
         <div className="leading-none font-semibold">Change Password</div>
         <div className="text-muted-foreground text-sm">Set new password for your account</div>
