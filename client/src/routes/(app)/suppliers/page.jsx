@@ -1,33 +1,19 @@
-import axios from 'axios';
-import { useEffect, useMemo, useState } from 'react';
-import { toast } from 'sonner';
+import { useMemo, useState } from 'react';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { useDeleteSupplier } from '@/features/suppliers/mutations';
 import { useSuppliers } from '@/features/suppliers/queries';
 
+import { DeleteSupplierDialog } from './_components/delete-supplier-dialog';
 import { SuppliersTable } from './_components/suppliers-table';
 import { UpdateSupplierDialog } from './_components/update-supplier-dialog';
 import { getColumns } from './_lib/columns';
 
 function Suppliers() {
-  const deleteSupplier = useDeleteSupplier({
-    onError: (err) => {
-      if (axios.isAxiosError(err) && err.response?.status === 409) {
-        toast.error('This record can’t be deleted because it’s linked to other records.');
-      }
-    },
-  });
   const { data = { suppliers: [], pageCount: 0 } } = useSuppliers();
 
   const [rowAction, setRowAction] = useState(null);
   const columns = useMemo(() => getColumns({ setRowAction }), []);
-
-  useEffect(() => {
-    if (rowAction === null || rowAction.variant != 'delete') return;
-    deleteSupplier.mutate(rowAction.row.original.id);
-  }, [rowAction]);
 
   return (
     <SidebarInset>
@@ -40,6 +26,11 @@ function Suppliers() {
         <SuppliersTable data={data} columns={columns} />
         <UpdateSupplierDialog
           open={rowAction?.variant === 'update'}
+          onOpenChange={() => setRowAction(null)}
+          supplier={rowAction?.row.original ?? null}
+        />
+        <DeleteSupplierDialog
+          open={rowAction?.variant === 'delete'}
           onOpenChange={() => setRowAction(null)}
           supplier={rowAction?.row.original ?? null}
         />

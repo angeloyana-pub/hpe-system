@@ -1,25 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { useDeleteOrder } from '@/features/orders/mutations';
 import { useOrders } from '@/features/orders/queries';
 
+import { DeleteOrderDialog } from './_components/delete-order-dialog';
 import { OrderItemsDialog } from './_components/order-items-dialog';
 import { OrdersTable } from './_components/orders-table';
 import { getColumns } from './_lib/columns';
 
 function Orders() {
-  const deleteOrder = useDeleteOrder();
   const { data = { orders: [], pageCount: 0 } } = useOrders();
 
   const [rowAction, setRowAction] = useState(null);
   const columns = useMemo(() => getColumns({ setRowAction }), []);
-
-  useEffect(() => {
-    if (rowAction === null || rowAction.variant != 'delete') return;
-    deleteOrder.mutate(rowAction.row.original.id);
-  }, [rowAction]);
 
   return (
     <SidebarInset>
@@ -32,6 +26,11 @@ function Orders() {
         <OrdersTable data={data} columns={columns} />
         <OrderItemsDialog
           open={rowAction?.variant === 'viewOrderItems'}
+          onOpenChange={() => setRowAction(null)}
+          order={rowAction?.row.original ?? null}
+        />
+        <DeleteOrderDialog
+          open={rowAction?.variant === 'delete'}
           onOpenChange={() => setRowAction(null)}
           order={rowAction?.row.original ?? null}
         />
