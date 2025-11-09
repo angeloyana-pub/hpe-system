@@ -1,7 +1,6 @@
-import { CreditCard, HandCoins, Wallet } from 'lucide-react';
+import { CreditCard, HandCoins } from 'lucide-react';
 
 export const paymentMethods = [
   { icon: HandCoins, label: 'Cash', value: 'cash' },
-  { icon: Wallet, label: 'GCash', value: 'gcash' },
-  { icon: CreditCard, label: 'Credit Card', value: 'credit_card' },
+  { icon: CreditCard, label: 'Check', value: 'check' },
 ];

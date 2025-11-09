@@ -160,7 +160,7 @@ export function CheckoutDialog(props) {
                       <RadioGroup
                         defaultValue={field.value}
                         onValueChange={field.onChange}
-                        className="grid grid-cols-2 gap-4 md:grid-cols-3"
+                        className="grid grid-cols-2"
                       >
                         {paymentMethods.map((option) => {
                           const Icon = option.icon;
