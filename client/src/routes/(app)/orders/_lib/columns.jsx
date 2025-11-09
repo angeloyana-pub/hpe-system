@@ -21,6 +21,13 @@ export function getColumns({ setRowAction }) {
       },
     },
     {
+      header: 'Customer',
+      cell: ({ row }) => {
+        const { firstName, lastName } = row.original.customer;
+        return `${firstName} ${lastName}`;
+      },
+    },
+    {
       accessorKey: 'paymentAmount',
       header: () => <div className="text-right font-medium">Payment Amount</div>,
       cell: ({ getValue }) => (

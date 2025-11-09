@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   Tags,
   Truck,
+  Users,
   Warehouse,
 } from 'lucide-react';
 
@@ -34,6 +35,11 @@ export const routes = [
     title: 'Purchases',
     path: '/purchases',
     icon: Truck,
+  },
+  {
+    title: 'Customers',
+    path: '/customers',
+    icon: Users,
   },
   {
     title: 'Orders',

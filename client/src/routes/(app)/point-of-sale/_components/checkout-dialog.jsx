@@ -22,7 +22,15 @@ import {
 } from '@/components/ui/form';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { paymentMethods } from '@/data/payment-methods';
+import { useAllCustomers } from '@/features/customers/queries';
 import { useAddOrder } from '@/features/orders/mutations';
 import { formatCurrency } from '@/lib/utils';
 
@@ -31,6 +39,7 @@ import { useCart } from './cart-context';
 import { TransactionCompleteDialog } from './transaction-complete-dialog';
 
 export function CheckoutDialog(props) {
+  const { data: customers } = useAllCustomers();
   const addOrder = useAddOrder();
 
   const { cart, total } = useCart();
@@ -57,6 +66,7 @@ export function CheckoutDialog(props) {
     startSubmitTransition(async () => {
       await addOrder.mutate({
         ...data,
+        customer: { id: data.customer },
         orderItems: cart.map((cartItem) => ({
           quantity: cartItem.quantity,
           price: cartItem.part.price,
@@ -81,6 +91,33 @@ export function CheckoutDialog(props) {
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
+              <FormField
+                name="customer"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Customer</FormLabel>
+                    <Select
+                      value={String(field.value ?? '')}
+                      onValueChange={(val) => field.onChange(parseInt(val))}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Customer" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {customers.map((customer) => (
+                          <SelectItem key={customer.id} value={String(customer.id)}>
+                            {customer.firstName} {customer.lastName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="paymentAmount"

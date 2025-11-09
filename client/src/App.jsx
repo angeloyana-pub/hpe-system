@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/context/theme-context';
 
 import { AuthProvider } from './auth/context';
 import { ProtectedRoute } from './auth/protected-route';
+import Customers from './routes/(app)/customers/page';
 import Dashboard from './routes/(app)/dashboard/page';
 import AppLayout from './routes/(app)/layout';
 import Orders from './routes/(app)/orders/page';
@@ -40,6 +41,7 @@ function App() {
                     <Route path="/parts" element={<Parts />} />
                     <Route path="/tags" element={<Tags />} />
                     <Route path="/suppliers" element={<Suppliers />} />
+                    <Route path="/customers" element={<Customers />} />
 
                     <Route path="/purchases" element={<Purchases />} />
                     <Route path="/purchases/add" element={<AddPurchase />} />

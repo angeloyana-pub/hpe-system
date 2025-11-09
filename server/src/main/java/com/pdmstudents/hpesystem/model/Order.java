@@ -28,6 +28,10 @@ public class Order {
 
   private LocalDateTime createdAt;
 
+  @ManyToOne
+  @JoinColumn(name = "customer_id")
+  private Customer customer;
+
   @OneToMany(
       mappedBy = "order",
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE},

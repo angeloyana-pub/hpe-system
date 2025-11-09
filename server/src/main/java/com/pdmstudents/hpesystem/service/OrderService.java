@@ -1,6 +1,7 @@
 package com.pdmstudents.hpesystem.service;
 
 import com.pdmstudents.hpesystem.model.Order;
+import com.pdmstudents.hpesystem.repository.CustomerRepository;
 import com.pdmstudents.hpesystem.repository.OrderRepository;
 import com.pdmstudents.hpesystem.repository.PartRepository;
 import org.springframework.data.domain.Page;
@@ -15,10 +16,13 @@ import org.springframework.web.server.ResponseStatusException;
 public class OrderService {
   private final OrderRepository repo;
   private final PartRepository partRepo;
+  private final CustomerRepository customerRepo;
 
-  public OrderService(OrderRepository repo, PartRepository partRepo) {
+  public OrderService(
+      OrderRepository repo, PartRepository partRepo, CustomerRepository customerRepo) {
     this.repo = repo;
     this.partRepo = partRepo;
+    this.customerRepo = customerRepo;
   }
 
   public Page<Order> getOrders(int page, int perPage) {
@@ -30,6 +34,14 @@ public class OrderService {
   public Order createOrder(Order order) {
     order.getOrderItems().forEach(orderItem -> orderItem.setOrder(order));
     Order savedOrder = repo.save(order);
+
+    customerRepo
+        .findById(order.getCustomer().getId())
+        .ifPresent(
+            customer -> {
+              savedOrder.setCustomer(customer);
+            });
+
     savedOrder
         .getOrderItems()
         .forEach(
