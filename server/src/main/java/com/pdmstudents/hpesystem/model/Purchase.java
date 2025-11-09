@@ -1,14 +1,18 @@
 package com.pdmstudents.hpesystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Table(name = "purchases")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Getter
 @Setter
 @ToString
@@ -17,23 +21,28 @@ public class Purchase {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Integer quantity;
-
-  @Column(precision = 10, scale = 2)
-  private BigDecimal price;
-
   private LocalDateTime createdAt;
 
   @ManyToOne
   @JoinColumn(name = "supplier_id")
   private Supplier supplier;
 
-  @ManyToOne
-  @JoinColumn(name = "part_id")
-  private Part part;
+  @OneToMany(
+      mappedBy = "purchase",
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+      orphanRemoval = true)
+  private List<PurchaseItem> purchaseItems;
 
   @PrePersist
   protected void onCreate() {
     createdAt = LocalDateTime.now();
+  }
+
+  public BigDecimal getTotal() {
+    return purchaseItems != null
+        ? purchaseItems.stream()
+            .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+            .reduce(BigDecimal.ZERO, BigDecimal::add)
+        : BigDecimal.ZERO;
   }
 }

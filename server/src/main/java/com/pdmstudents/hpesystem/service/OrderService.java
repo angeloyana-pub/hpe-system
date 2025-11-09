@@ -26,7 +26,7 @@ public class OrderService {
     return repo.getOrders(pageable);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public Order createOrder(Order order) {
     order.getOrderItems().forEach(orderItem -> orderItem.setOrder(order));
     Order savedOrder = repo.save(order);
@@ -40,7 +40,7 @@ public class OrderService {
     return savedOrder;
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public void deleteOrder(Long id) {
     repo.findById(id)
         .ifPresentOrElse(

@@ -5,6 +5,11 @@ export async function getPurchases(params) {
   return res.data.data;
 }
 
+export async function getPurchase(id) {
+  const res = await client.get(`/purchases/${id}`);
+  return res.data.data;
+}
+
 export async function addPurchase(payload) {
   const res = await client.post('/purchases', payload);
   return res.data.data;

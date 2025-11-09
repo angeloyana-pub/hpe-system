@@ -30,76 +30,90 @@ public class PurchaseService {
     return repo.getPurchases(pageable);
   }
 
-  @Transactional
-  public Purchase createPurchase(Purchase purchase) {
-    if (purchase.getSupplier() != null) {
-      supplierRepo
-          .findById(purchase.getSupplier().getId())
-          .ifPresent(
-              supplier -> {
-                purchase.setSupplier(supplier);
-              });
-    }
-    if (purchase.getPart() != null) {
-      partRepo
-          .findById(purchase.getPart().getId())
-          .ifPresent(
-              part -> {
-                purchase.setPart(part);
-                part.setStock(part.getStock() + purchase.getQuantity());
-              });
-    }
-    return repo.save(purchase);
+  public Purchase getPurchase(Long id) {
+    return repo.findById(id)
+        .map(purchase -> purchase)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
+  public Purchase createPurchase(Purchase purchase) {
+    purchase.getPurchaseItems().forEach(purchaseItem -> purchaseItem.setPurchase(purchase));
+    Purchase savedPurchase = repo.save(purchase);
+
+    supplierRepo
+        .findById(savedPurchase.getSupplier().getId())
+        .ifPresent(
+            supplier -> {
+              savedPurchase.setSupplier(supplier);
+            });
+
+    savedPurchase
+        .getPurchaseItems()
+        .forEach(
+            purchaseItem -> {
+              partRepo
+                  .findById(purchaseItem.getPart().getId())
+                  .ifPresent(
+                      part -> {
+                        purchaseItem.setPart(part);
+                        part.setStock(part.getStock() + purchaseItem.getQuantity());
+                      });
+            });
+    return savedPurchase;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
   public Purchase updatePurchase(Long id, Purchase updatedPurchase) {
     return repo.findById(id)
         .map(
             purchase -> {
-              int prevQuantity = purchase.getQuantity();
-              var prevPart = purchase.getPart();
-
-              if (updatedPurchase.getQuantity() != null) {
-                purchase.setQuantity(updatedPurchase.getQuantity());
-              }
-              if (updatedPurchase.getPrice() != null) {
-                purchase.setPrice(updatedPurchase.getPrice());
-              }
               if (updatedPurchase.getSupplier() != null) {
                 supplierRepo
                     .findById(updatedPurchase.getSupplier().getId())
-                    .ifPresent(
-                        supplier -> {
-                          purchase.setSupplier(supplier);
-                        });
+                    .ifPresent(supplier -> purchase.setSupplier(supplier));
               }
-              if (updatedPurchase.getPart() != null) {
-                partRepo
-                    .findById(updatedPurchase.getPart().getId())
-                    .ifPresent(
-                        part -> {
-                          if (!part.equals(prevPart)) {
-                            prevPart.setStock(prevPart.getStock() - prevQuantity);
-                            part.setStock(part.getStock() + updatedPurchase.getQuantity());
-                          } else if (updatedPurchase.getQuantity() != null) {
-                            part.setStock(
-                                part.getStock() - prevQuantity + updatedPurchase.getQuantity());
-                          }
+
+              var purchaseItems = updatedPurchase.getPurchaseItems();
+              if (purchaseItems != null) {
+                purchase
+                    .getPurchaseItems()
+                    .forEach(
+                        (item) -> {
+                          var part = item.getPart();
+                          part.setStock(part.getStock() - item.getQuantity());
                         });
+                purchaseItems.forEach(
+                    item -> {
+                      partRepo
+                          .findById(item.getPart().getId())
+                          .ifPresent(
+                              part -> {
+                                item.setPurchase(purchase);
+                                part.setStock(part.getStock() + item.getQuantity());
+                                partRepo.save(part);
+                              });
+                    });
+                purchase.getPurchaseItems().clear();
+                purchase.getPurchaseItems().addAll(purchaseItems);
               }
+
               return repo.save(purchase);
             })
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public void deletePurchase(Long id) {
     repo.findById(id)
         .ifPresentOrElse(
             purchase -> {
-              var part = purchase.getPart();
-              part.setStock(part.getStock() - purchase.getQuantity());
+              purchase
+                  .getPurchaseItems()
+                  .forEach(
+                      (item) -> {
+                        partRepo.decreaseStock(item.getPart().getId(), item.getQuantity());
+                      });
               repo.delete(purchase);
             },
             () -> {

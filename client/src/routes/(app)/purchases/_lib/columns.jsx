@@ -1,4 +1,5 @@
 import { MoreHorizontal } from 'lucide-react';
+import { Link } from 'react-router';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,28 +20,20 @@ export function getColumns({ setRowAction }) {
       },
     },
     {
-      accessorKey: 'part.name',
-      header: 'Part',
+      accessorKey: 'supplier.name',
+      header: 'Supplier',
       meta: {
-        label: 'Part',
+        label: 'Supplier',
       },
     },
     {
-      accessorKey: 'quantity',
-      header: () => <div className="text-right font-medium">Quantity</div>,
-      cell: ({ getValue }) => <div className="text-right font-medium">{getValue()}</div>,
-      meta: {
-        label: 'Quantity',
-      },
-    },
-    {
-      accessorKey: 'price',
-      header: () => <div className="text-right font-medium">Price</div>,
+      accessorKey: 'total',
+      header: () => <div className="text-right font-medium">Total</div>,
       cell: ({ getValue }) => (
         <div className="text-right font-medium">{formatCurrency(getValue())}</div>
       ),
       meta: {
-        label: 'Price',
+        label: 'Total',
       },
     },
     {
@@ -52,17 +45,10 @@ export function getColumns({ setRowAction }) {
       },
     },
     {
-      accessorKey: 'supplier.name',
-      header: 'Supplier',
-      meta: {
-        label: 'Supplier',
-      },
-    },
-    {
       id: 'actions',
       cell: ({ row }) => {
-        const handleEdit = () => {
-          setRowAction({ row, variant: 'update' });
+        const handleViewPurchaseItems = () => {
+          setRowAction({ row, variant: 'viewPurchaseItems' });
         };
 
         const handleDelete = () => {
@@ -78,7 +64,12 @@ export function getColumns({ setRowAction }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleViewPurchaseItems}>
+                  View Purchase Items
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={`/purchases/update/${row.original.id}`}>Edit</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

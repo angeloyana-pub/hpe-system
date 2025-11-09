@@ -12,7 +12,9 @@ import AppLayout from './routes/(app)/layout';
 import Orders from './routes/(app)/orders/page';
 import Parts from './routes/(app)/parts/page';
 import PointOfSale from './routes/(app)/point-of-sale/page';
+import AddPurchase from './routes/(app)/purchases/add/page';
 import Purchases from './routes/(app)/purchases/page';
+import UpdatePurchase from './routes/(app)/purchases/update/page';
 import Reports from './routes/(app)/reports/page';
 import Settings from './routes/(app)/settings/page';
 import Suppliers from './routes/(app)/suppliers/page';
@@ -38,7 +40,11 @@ function App() {
                     <Route path="/parts" element={<Parts />} />
                     <Route path="/tags" element={<Tags />} />
                     <Route path="/suppliers" element={<Suppliers />} />
+
                     <Route path="/purchases" element={<Purchases />} />
+                    <Route path="/purchases/add" element={<AddPurchase />} />
+                    <Route path="/purchases/update/:id" element={<UpdatePurchase />} />
+
                     <Route path="/orders" element={<Orders />} />
                     <Route path="/point-of-sale" element={<PointOfSale />} />
                     <Route path="/reports" element={<Reports />} />

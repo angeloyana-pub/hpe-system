@@ -14,5 +14,3 @@ export const addPurchaseSchema = z.object({
     )
     .min(1, { message: 'Items is required' }),
 });
-
-export const updatePurchaseSchema = addPurchaseSchema;

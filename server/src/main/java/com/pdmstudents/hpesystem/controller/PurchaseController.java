@@ -27,6 +27,12 @@ public class PurchaseController {
             "pageCount", result.getTotalPages()));
   }
 
+  @GetMapping("/{id}")
+  public ApiResponse<Purchase> getPurchase(@PathVariable Long id) {
+    Purchase purchase = service.getPurchase(id);
+    return new ApiResponse<>(200, purchase);
+  }
+
   @PostMapping
   public ApiResponse<Purchase> createPurchase(@RequestBody Purchase purchase) {
     Purchase savedPurchase = service.createPurchase(purchase);
