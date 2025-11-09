@@ -18,6 +18,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -58,9 +59,25 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem key={routes.dashboard.title}>
+                <SidebarMenuButton asChild>
+                  <Link to={routes.dashboard.path}>
+                    <routes.dashboard.icon />
+                    {routes.dashboard.title}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Inventory</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {routes.map((route) => (
+              {routes.inventory.map((route) => (
                 <SidebarMenuItem key={route.title}>
                   <SidebarMenuButton asChild>
                     <Link to={route.path}>
@@ -72,6 +89,38 @@ export function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Sales</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {routes.sales.map((route) => (
+                <SidebarMenuItem key={route.title}>
+                  <SidebarMenuButton asChild>
+                    <Link to={route.path}>
+                      <route.icon />
+                      {route.title}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Reports</SidebarGroupLabel>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem key={routes.reports.title}>
+                <SidebarMenuButton asChild>
+                  <Link to={routes.reports.path}>
+                    <routes.reports.icon />
+                    {routes.reports.title}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>

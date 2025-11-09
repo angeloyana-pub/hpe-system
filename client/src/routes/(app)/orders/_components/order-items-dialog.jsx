@@ -17,9 +17,9 @@ export function OrderItemsDialog({ order, ...props }) {
           <DialogTitle>Order Items</DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-[300px]">
-          <div className="grid">
+          <div className="grid gap-4">
             {order?.orderItems.map((item) => (
-              <div key={item.id} className="p-4 rounded-md hover:bg-accent">
+              <div key={item.id} className="p-4 rounded-md border bg-card text-card-foreground">
                 <div className="font-medium">{item.part.name}</div>
                 <div className="text-muted-foreground">Price: {formatCurrency(item.price)}</div>
                 <div className="text-muted-foreground">Quantity: {item.quantity}</div>
