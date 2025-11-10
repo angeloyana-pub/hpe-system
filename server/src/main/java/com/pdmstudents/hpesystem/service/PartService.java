@@ -46,9 +46,6 @@ public class PartService {
               if (updatedPart.getSize() != null) {
                 part.setSize(updatedPart.getSize());
               }
-              if (updatedPart.getStock() != null) {
-                part.setStock(updatedPart.getStock());
-              }
               if (updatedPart.getLowStockThreshold() != null) {
                 part.setLowStockThreshold(updatedPart.getLowStockThreshold());
               }

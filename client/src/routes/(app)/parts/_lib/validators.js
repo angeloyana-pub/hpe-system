@@ -19,4 +19,6 @@ export const addPartSchema = z.object({
   tags: z.array(z.number()),
 });
 
-export const updatePartSchema = addPartSchema;
+export const updatePartSchema = addPartSchema.omit({
+  stock: true,
+});

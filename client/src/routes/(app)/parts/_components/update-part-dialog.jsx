@@ -108,28 +108,6 @@ export function UpdatePartDialog({ part, ...props }) {
             />
             <FormField
               control={form.control}
-              name="stock"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Stock</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Stock"
-                      {...field}
-                      value={String(field.value ?? '')}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value);
-                        field.onChange(!isNaN(value) ? value : undefined);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="lowStockThreshold"
               render={({ field }) => (
                 <FormItem>
