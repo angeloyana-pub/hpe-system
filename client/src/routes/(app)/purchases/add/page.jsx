@@ -12,7 +12,7 @@ function AddPurchase() {
   const addPurchase = useAddPurchase();
 
   const handleSubmit = async (data) => {
-    await addPurchase.mutateAsync({
+    const { id } = await addPurchase.mutateAsync({
       ...data,
       supplier: { id: data.supplier },
       purchaseItems: data.purchaseItems.map((item) => ({
@@ -23,7 +23,7 @@ function AddPurchase() {
     toast.success('Purchase has been added', {
       action: {
         label: 'View',
-        onClick: () => navigate('/purchases'),
+        onClick: () => navigate(`/purchases?id=${id}`),
       },
     });
   };

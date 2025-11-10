@@ -54,7 +54,7 @@ function UpdateOrder() {
       toast.success('Order has been updated', {
         action: {
           label: 'View',
-          onClick: () => navigate('/orders'),
+          onClick: () => navigate(`/orders?id=${id}`),
         },
       });
     } catch (err) {

@@ -53,7 +53,7 @@ function UpdatePurchase() {
     toast.success('Purchase has been updated', {
       action: {
         label: 'View',
-        onClick: () => navigate('/purchases'),
+        onClick: () => navigate(`/purchases?id=${id}`),
       },
     });
   };

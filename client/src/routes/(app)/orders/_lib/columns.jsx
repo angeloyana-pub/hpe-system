@@ -27,10 +27,15 @@ export function getColumns({ setRowAction }) {
       },
     },
     {
+      accessorKey: 'customer',
       header: 'Customer',
-      cell: ({ row }) => {
-        const { firstName, lastName } = row.original.customer;
-        return `${firstName} ${lastName}`;
+      cell: ({ getValue }) => {
+        const { id, firstName, lastName } = getValue();
+        return (
+          <Link to={`/customers?id=${id}`}>
+            {firstName} {lastName}
+          </Link>
+        );
       },
       meta: {
         label: 'Customer',

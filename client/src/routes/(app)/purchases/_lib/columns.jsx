@@ -26,8 +26,12 @@ export function getColumns({ setRowAction }) {
       },
     },
     {
-      accessorKey: 'supplier.name',
+      accessorKey: 'supplier',
       header: 'Supplier',
+      cell: ({ getValue }) => {
+        const supplier = getValue();
+        return <Link to={`/suppliers?id=${supplier.id}`}>{supplier.name}</Link>;
+      },
       meta: {
         label: 'Supplier',
       },

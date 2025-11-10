@@ -12,7 +12,7 @@ function AddOrder() {
   const addOrder = useAddOrder();
 
   const handleSubmit = async (data) => {
-    await addOrder.mutateAsync({
+    const { id } = await addOrder.mutateAsync({
       ...data,
       customer: { id: data.customer },
       orderItems: data.orderItems.map((item) => ({
@@ -23,7 +23,7 @@ function AddOrder() {
     toast.success('Order has been added', {
       action: {
         label: 'View',
-        onClick: () => navigate('/orders'),
+        onClick: () => navigate(`/orders?id=${id}`),
       },
     });
   };

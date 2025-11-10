@@ -1,6 +1,7 @@
 import { MoreHorizontal } from 'lucide-react';
+import { Link } from 'react-router';
 
-import { Badge } from '@/components/ui/badge';
+import { badgeVariants } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -81,9 +82,13 @@ export function getColumns({ setRowAction, tags }) {
         return (
           <div className="flex gap-2">
             {tags.map((tag) => (
-              <Badge key={tag.id} variant="outline">
+              <Link
+                key={tag.id}
+                to={`/tags?id=${tag.id}`}
+                className={badgeVariants({ variant: 'outline' })}
+              >
                 {tag.name}
-              </Badge>
+              </Link>
             ))}
           </div>
         );

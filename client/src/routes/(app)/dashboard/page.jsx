@@ -1,6 +1,8 @@
-import { PhilippinePeso, ShoppingCart, TrendingDown } from 'lucide-react';
+import { Eye, PhilippinePeso, ShoppingCart, TrendingDown } from 'lucide-react';
+import { Link } from 'react-router';
 
 import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
@@ -81,6 +83,7 @@ function Dashboard() {
                     <TableHead>Tags</TableHead>
                     <TableHead className="text-right">Price</TableHead>
                     <TableHead className="text-right">Stock</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -108,6 +111,15 @@ function Dashboard() {
                           {formatCurrency(part.price)}
                         </TableCell>
                         <TableCell className="text-right font-medium">{part.stock}</TableCell>
+                        <TableCell className="text-right">
+                          <Link
+                            to={`/parts?id=${part.id}`}
+                            aria-label="view part"
+                            className={buttonVariants({ variant: 'ghost', size: 'icon' })}
+                          >
+                            <Eye />
+                          </Link>
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
