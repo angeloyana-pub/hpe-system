@@ -1,6 +1,7 @@
 import { MoreHorizontal } from 'lucide-react';
 import { Link } from 'react-router';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -8,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { purchaseStatus } from '@/data/purchase-status';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
 export function getColumns({ setRowAction }) {
@@ -34,6 +36,16 @@ export function getColumns({ setRowAction }) {
       ),
       meta: {
         label: 'Total',
+      },
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ getValue }) => {
+        const status = getValue();
+        return (
+          <Badge variant="outline">{purchaseStatus.find((s) => s.value === status)?.label}</Badge>
+        );
       },
     },
     {
@@ -67,9 +79,11 @@ export function getColumns({ setRowAction }) {
                 <DropdownMenuItem onClick={handleViewPurchaseItems}>
                   View Purchase Items
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to={`/purchases/update/${row.original.id}`}>Edit</Link>
-                </DropdownMenuItem>
+                {row.original.status != 'COMPLETED' && (
+                  <DropdownMenuItem asChild>
+                    <Link to={`/purchases/update/${row.original.id}`}>Edit</Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

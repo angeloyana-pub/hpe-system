@@ -10,7 +10,9 @@ import { ProtectedRoute } from './auth/protected-route';
 import Customers from './routes/(app)/customers/page';
 import Dashboard from './routes/(app)/dashboard/page';
 import AppLayout from './routes/(app)/layout';
+import AddOrder from './routes/(app)/orders/add/page';
 import Orders from './routes/(app)/orders/page';
+import UpdateOrder from './routes/(app)/orders/update/page';
 import Parts from './routes/(app)/parts/page';
 import PointOfSale from './routes/(app)/point-of-sale/page';
 import AddPurchase from './routes/(app)/purchases/add/page';
@@ -48,6 +50,9 @@ function App() {
                     <Route path="/purchases/update/:id" element={<UpdatePurchase />} />
 
                     <Route path="/orders" element={<Orders />} />
+                    <Route path="/orders/add" element={<AddOrder />} />
+                    <Route path="/orders/update/:id" element={<UpdateOrder />} />
+
                     <Route path="/point-of-sale" element={<PointOfSale />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/settings" element={<Settings />} />

@@ -1,4 +1,4 @@
-import { Calculator } from 'lucide-react';
+import { Calculator, Plus } from 'lucide-react';
 import { Link } from 'react-router';
 
 import { DataTable } from '@/components/data-table/data-table';
@@ -18,9 +18,12 @@ export function OrdersTable({ data, columns }) {
   return (
     <DataTable table={table}>
       <DataTableToolbar table={table}>
-        <Link to="/point-of-sale" className={buttonVariants()}>
+        <Link to="/point-of-sale" className={buttonVariants({ variant: 'outline' })}>
           <Calculator />
           Point of Sale
+        </Link>
+        <Link to="/orders/add" className={buttonVariants({ size: 'icon' })}>
+          <Plus />
         </Link>
       </DataTableToolbar>
     </DataTable>

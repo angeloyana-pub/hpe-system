@@ -27,10 +27,22 @@ public class OrderController {
             "pageCount", result.getTotalPages()));
   }
 
+  @GetMapping("/{id}")
+  public ApiResponse<Order> getOrder(@PathVariable Long id) {
+    Order order = service.getOrder(id);
+    return new ApiResponse<>(200, order);
+  }
+
   @PostMapping
   public ApiResponse<Order> createOrder(@RequestBody Order order) {
     Order savedOrder = service.createOrder(order);
     return new ApiResponse<>(200, savedOrder);
+  }
+
+  @PatchMapping("/{id}")
+  public ApiResponse<Order> updateOrder(@PathVariable Long id, @RequestBody Order updatedOrder) {
+    Order order = service.updateOrder(id, updatedOrder);
+    return new ApiResponse<>(200, order);
   }
 
   @DeleteMapping("/{id}")

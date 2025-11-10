@@ -2,13 +2,25 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useAuthenticatedMutation } from '@/hooks/use-authenticated-mutation';
 
-import { addOrder, deleteOrder } from './service';
+import { addOrder, deleteOrder, updateOrder } from './service';
 
 export function useAddOrder(opts) {
   const queryClient = useQueryClient();
 
   return useAuthenticatedMutation({
     mutationFn: (data) => addOrder(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['orders']);
+    },
+    ...opts,
+  });
+}
+
+export function useUpdateOrder(opts) {
+  const queryClient = useQueryClient();
+
+  return useAuthenticatedMutation({
+    mutationFn: ({ id, updatedOrder }) => updateOrder(id, updatedOrder),
     onSuccess: () => {
       queryClient.invalidateQueries(['orders']);
     },

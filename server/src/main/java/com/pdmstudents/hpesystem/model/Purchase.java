@@ -2,6 +2,7 @@ package com.pdmstudents.hpesystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.pdmstudents.hpesystem.enums.PurchaseStatus;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,6 +23,9 @@ public class Purchase {
   private Long id;
 
   private LocalDateTime createdAt;
+
+  @Enumerated(EnumType.STRING)
+  private PurchaseStatus status;
 
   @ManyToOne
   @JoinColumn(name = "supplier_id")

@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { orderStatus } from '@/data/order-status';
 import { paymentMethods } from '@/data/payment-methods';
 import { useAllCustomers } from '@/features/customers/queries';
 import { useAddOrder } from '@/features/orders/mutations';
@@ -49,6 +50,7 @@ export function CheckoutDialog(props) {
   const form = useForm({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
+      status: 'PROCESSING',
       paymentMethod: 'cash',
     },
   });
@@ -119,16 +121,40 @@ export function CheckoutDialog(props) {
                 )}
               />
               <FormField
+                name="status"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select value={field.value ?? ''} onValueChange={(val) => field.onChange(val)}>
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {orderStatus.map((status) => (
+                          <SelectItem key={status.value} value={status.value}>
+                            {status.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
                 control={form.control}
                 name="paymentAmount"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Payment</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <PhilippinePeso />
-                        </InputGroupAddon>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <PhilippinePeso />
+                      </InputGroupAddon>
+                      <FormControl>
                         <InputGroupInput
                           type="number"
                           inputMode="numeric"
@@ -140,8 +166,8 @@ export function CheckoutDialog(props) {
                             field.onChange(!isNaN(value) ? value : undefined);
                           }}
                         />
-                      </InputGroup>
-                    </FormControl>
+                      </FormControl>
+                    </InputGroup>
                     <FormDescription>
                       Change:{' '}
                       {formatCurrency(paymentAmount !== undefined ? paymentAmount - total : 0)}

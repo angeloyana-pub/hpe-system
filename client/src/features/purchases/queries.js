@@ -18,7 +18,7 @@ export function usePurchases(opts) {
 
 export function usePurchase(id, opts) {
   return useAuthenticatedQuery({
-    queryKey: ['purchase', id],
+    queryKey: ['purchases', id],
     queryFn: () => getPurchase(id),
     placeholderData: (prevData) => prevData,
     ...opts,

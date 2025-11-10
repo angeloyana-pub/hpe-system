@@ -2,6 +2,7 @@ package com.pdmstudents.hpesystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.pdmstudents.hpesystem.enums.OrderStatus;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,8 +26,10 @@ public class Order {
   private BigDecimal paymentAmount;
 
   private String paymentMethod;
-
   private LocalDateTime createdAt;
+
+  @Enumerated(EnumType.STRING)
+  private OrderStatus status;
 
   @ManyToOne
   @JoinColumn(name = "customer_id")
@@ -34,7 +37,7 @@ public class Order {
 
   @OneToMany(
       mappedBy = "order",
-      cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
       orphanRemoval = true)
   private List<OrderItem> orderItems;
 

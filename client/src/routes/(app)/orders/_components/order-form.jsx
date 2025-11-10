@@ -21,35 +21,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { purchaseStatus } from '@/data/purchase-status';
-import { useAllSuppliers } from '@/features/suppliers/queries';
+import { orderStatus } from '@/data/order-status';
+import { paymentMethods } from '@/data/payment-methods';
+import { useAllCustomers } from '@/features/customers/queries';
+import { formatCurrency } from '@/lib/utils';
 
-import { addPurchaseSchema, updatePurchaseSchema } from '../_lib/validators';
+import { addOrderSchema, updateOrderSchema } from '../_lib/validators';
 import { PartPickerDialog } from './part-picker-dialog';
 
-export function PurchaseForm({ variant, defaultValues, onSubmit }) {
-  const { data: suppliers = [] } = useAllSuppliers();
+export function OrderForm({ variant, defaultValues, onSubmit }) {
+  const { data: customers = [] } = useAllCustomers();
   const [isSubmitPending, startSubmitTransition] = useTransition();
 
   const form = useForm({
-    resolver: zodResolver(variant === 'add' ? addPurchaseSchema : updatePurchaseSchema),
+    resolver: zodResolver(variant === 'add' ? addOrderSchema : updateOrderSchema),
     defaultValues: defaultValues ?? {
       status: 'PROCESSING',
-      purchaseItems: [],
+      orderItems: [],
     },
   });
-  const purchaseItemsField = useFieldArray({
-    name: 'purchaseItems',
+  const orderItemsField = useFieldArray({
+    name: 'orderItems',
     control: form.control,
   });
 
-  const handleAddPurchaseItem = (part) => {
-    const items = form.getValues('purchaseItems');
+  const handleAddOrderItem = (part) => {
+    const items = form.getValues('orderItems');
     const index = items.findIndex((item) => item.part.id === part.id);
     if (index >= 0) {
-      form.setValue(`purchaseItems.${index}.quantity`, items[index].quantity + 1);
+      form.setValue(`orderItems.${index}.quantity`, items[index].quantity + 1);
     } else {
-      purchaseItemsField.append({
+      orderItemsField.append({
         quantity: 1,
         price: part.price,
         part,
@@ -58,6 +60,15 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
   };
 
   const handleSubmit = (data) => {
+    const total = data.orderItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    if (data.paymentAmount < total) {
+      form.setError('paymentAmount', {
+        type: 'manual',
+        message: `Insufficient payment amount. Must be greater than or equal to ${formatCurrency(total)}`,
+      });
+      return;
+    }
+
     startSubmitTransition(async () => {
       await onSubmit(data);
       form.reset();
@@ -68,24 +79,24 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
       <Form {...form}>
         <FormField
-          name="supplier"
+          name="customer"
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Supplier</FormLabel>
+              <FormLabel>Customer</FormLabel>
               <Select
                 value={String(field.value ?? '')}
                 onValueChange={(val) => field.onChange(parseInt(val))}
               >
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select supplier" />
+                    <SelectValue placeholder="Select customer" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {suppliers.map((supplier) => (
-                    <SelectItem key={supplier.id} value={String(supplier.id)}>
-                      {supplier.name}
+                  {customers.map((customer) => (
+                    <SelectItem key={customer.id} value={String(customer.id)}>
+                      {customer.firstName} {customer.lastName}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -107,7 +118,7 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {purchaseStatus.map((status) => (
+                  {orderStatus.map((status) => (
                     <SelectItem key={status.value} value={status.value}>
                       {status.label}
                     </SelectItem>
@@ -119,13 +130,64 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
           )}
         />
         <FormField
-          name="purchaseItems"
+          name="paymentAmount"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Payment</FormLabel>
+              <InputGroup>
+                <InputGroupAddon>
+                  <PhilippinePeso />
+                </InputGroupAddon>
+                <FormControl>
+                  <InputGroupInput
+                    type="number"
+                    placeholder="0.00"
+                    {...field}
+                    value={String(field.value ?? '')}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      field.onChange(!isNaN(value) ? value : undefined);
+                    }}
+                  />
+                </FormControl>
+              </InputGroup>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="paymentMethod"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Payment Method</FormLabel>
+              <Select value={field.value ?? ''} onValueChange={(val) => field.onChange(val)}>
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select payment method" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {paymentMethods.map((method) => (
+                    <SelectItem key={method.value} value={method.value}>
+                      {method.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="orderItems"
           control={form.control}
           render={() => (
             <FormItem>
               <FormLabel>Items</FormLabel>
               <div className="grid gap-2">
-                {purchaseItemsField.fields.map((field, index) => (
+                {orderItemsField.fields.map((field, index) => (
                   <div
                     key={field.id}
                     className="bg-muted border rounded-md p-4 space-y-4 shadow-xs"
@@ -139,7 +201,7 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        onClick={() => purchaseItemsField.remove(index)}
+                        onClick={() => orderItemsField.remove(index)}
                         className="size-5"
                       >
                         <X />
@@ -147,20 +209,20 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
                     </div>
                     <div className="flex gap-4 [&>[data-slot=form-item]]:w-full">
                       <FormField
-                        name={`purchaseItems.${index}.quantity`}
+                        name={`orderItems.${index}.quantity`}
                         control={form.control}
-                        render={({ field }) => (
+                        render={({ field: qtyField }) => (
                           <FormItem>
                             <FormLabel>Quantity</FormLabel>
                             <FormControl>
                               <Input
                                 type="number"
                                 placeholder="Quantity"
-                                {...field}
-                                value={String(field.value ?? '')}
+                                {...qtyField}
+                                value={String(qtyField.value ?? '')}
                                 onChange={(e) => {
                                   const value = parseInt(e.target.value);
-                                  field.onChange(!isNaN(value) ? value : undefined);
+                                  qtyField.onChange(!isNaN(value) ? value : undefined);
                                 }}
                               />
                             </FormControl>
@@ -168,7 +230,7 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
                         )}
                       />
                       <FormField
-                        name={`purchaseItems.${index}.price`}
+                        name={`orderItems.${index}.price`}
                         control={form.control}
                         render={({ field }) => (
                           <FormItem>
@@ -198,7 +260,7 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
                   </div>
                 ))}
               </div>
-              <PartPickerDialog onPick={handleAddPurchaseItem} />
+              <PartPickerDialog onPick={handleAddOrderItem} />
               <FormMessage />
             </FormItem>
           )}
@@ -206,7 +268,7 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
       </Form>
       <Button type="submit" disabled={isSubmitPending}>
         {isSubmitPending ? <Loader className="animate-spin" /> : <Plus />}
-        {variant === 'add' ? 'Add' : 'Update'} Purchase
+        {variant === 'add' ? 'Add' : 'Update'} Order
       </Button>
     </form>
   );

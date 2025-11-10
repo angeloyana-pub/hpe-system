@@ -1,7 +1,13 @@
 import { z } from 'zod';
 
+import { purchaseStatus } from '@/data/purchase-status';
+
 export const addPurchaseSchema = z.object({
   supplier: z.number({ message: 'Supplier is required' }),
+  status: z.enum(
+    purchaseStatus.map((s) => s.value),
+    { message: 'Status is required' }
+  ),
   purchaseItems: z
     .array(
       z.object({

@@ -155,11 +155,11 @@ export function AddPartDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <PhilippinePeso />
-                      </InputGroupAddon>
+                  <InputGroup>
+                    <InputGroupAddon>
+                      <PhilippinePeso />
+                    </InputGroupAddon>
+                    <FormControl>
                       <InputGroupInput
                         type="number"
                         inputMode="decimal"
@@ -171,8 +171,8 @@ export function AddPartDialog() {
                           field.onChange(!isNaN(value) ? value : undefined);
                         }}
                       />
-                    </InputGroup>
-                  </FormControl>
+                    </FormControl>
+                  </InputGroup>
                   <FormMessage />
                 </FormItem>
               )}

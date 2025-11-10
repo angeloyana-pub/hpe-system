@@ -23,7 +23,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
       COALESCE(SUM(oi.price * oi.quantity), 0)
     FROM orders o
     LEFT JOIN order_items oi ON oi.order_id = o.id
-    WHERE (:from IS NULL OR o.created_at >= :from)
+    WHERE o.status = 'COMPLETED'
+      AND (:from IS NULL OR o.created_at >= :from)
       AND (:to IS NULL OR o.created_at <= :to)
     GROUP BY YEAR(o.created_at), MONTH(o.created_at)
     ORDER BY YEAR(o.created_at), MONTH(o.created_at)
@@ -39,7 +40,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
       COALESCE(SUM(oi.price * oi.quantity), 0)
     FROM orders o
     LEFT JOIN order_items oi ON oi.order_id = o.id
-    WHERE (:from IS NULL OR o.created_at >= :from)
+    WHERE o.status = 'COMPLETED'
+      AND (:from IS NULL OR o.created_at >= :from)
       AND (:to IS NULL OR o.created_at <= :to)
     GROUP BY YEAR(o.created_at)
     ORDER BY YEAR(o.created_at)
@@ -65,6 +67,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
       ) AS previous_total_sales
     FROM orders o
     LEFT JOIN order_items oi ON oi.order_id = o.id
+    WHERE o.status = 'COMPLETED'
   """,
       nativeQuery = true)
   List<BigDecimal[]> getTotalSales();

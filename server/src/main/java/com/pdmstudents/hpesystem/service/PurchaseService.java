@@ -1,5 +1,6 @@
 package com.pdmstudents.hpesystem.service;
 
+import com.pdmstudents.hpesystem.enums.PurchaseStatus;
 import com.pdmstudents.hpesystem.model.Purchase;
 import com.pdmstudents.hpesystem.repository.PartRepository;
 import com.pdmstudents.hpesystem.repository.PurchaseRepository;
@@ -57,7 +58,9 @@ public class PurchaseService {
                   .ifPresent(
                       part -> {
                         purchaseItem.setPart(part);
-                        part.setStock(part.getStock() + purchaseItem.getQuantity());
+                        if (savedPurchase.getStatus() == PurchaseStatus.COMPLETED) {
+                          part.setStock(part.getStock() + purchaseItem.getQuantity());
+                        }
                       });
             });
     return savedPurchase;
@@ -68,34 +71,45 @@ public class PurchaseService {
     return repo.findById(id)
         .map(
             purchase -> {
-              if (updatedPurchase.getSupplier() != null) {
-                supplierRepo
-                    .findById(updatedPurchase.getSupplier().getId())
-                    .ifPresent(supplier -> purchase.setSupplier(supplier));
+              var prevStatus = purchase.getStatus();
+              var newStatus = updatedPurchase.getStatus();
+              if (prevStatus == PurchaseStatus.COMPLETED) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
               }
 
-              var purchaseItems = updatedPurchase.getPurchaseItems();
-              if (purchaseItems != null) {
-                purchase
-                    .getPurchaseItems()
-                    .forEach(
-                        (item) -> {
-                          var part = item.getPart();
-                          part.setStock(part.getStock() - item.getQuantity());
-                        });
-                purchaseItems.forEach(
-                    item -> {
-                      partRepo
-                          .findById(item.getPart().getId())
-                          .ifPresent(
-                              part -> {
-                                item.setPurchase(purchase);
-                                part.setStock(part.getStock() + item.getQuantity());
-                                partRepo.save(part);
-                              });
-                    });
-                purchase.getPurchaseItems().clear();
-                purchase.getPurchaseItems().addAll(purchaseItems);
+              var newSupplier = updatedPurchase.getSupplier();
+              if (newSupplier != null) {
+                purchase.setSupplier(newSupplier);
+              }
+
+              var prevItems = purchase.getPurchaseItems();
+              var newItems = updatedPurchase.getPurchaseItems();
+              if (newItems != null) {
+                for (var item : newItems) {
+                  item.setPurchase(purchase);
+                  partRepo.findById(item.getPart().getId()).ifPresent(item::setPart);
+                }
+
+                if (newStatus == PurchaseStatus.COMPLETED) {
+                  for (var item : newItems) {
+                    var part = item.getPart();
+                    part.setStock(part.getStock() + item.getQuantity());
+                  }
+                }
+
+                prevItems.clear();
+                prevItems.addAll(newItems);
+              } else {
+                if (newStatus == PurchaseStatus.COMPLETED) {
+                  for (var item : prevItems) {
+                    var part = item.getPart();
+                    part.setStock(part.getStock() + item.getQuantity());
+                  }
+                }
+              }
+
+              if (newStatus != null) {
+                purchase.setStatus(newStatus);
               }
 
               return repo.save(purchase);
