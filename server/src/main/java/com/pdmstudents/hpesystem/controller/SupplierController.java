@@ -19,10 +19,11 @@ public class SupplierController {
 
   @GetMapping
   public ApiResponse<Map<String, Object>> getSuppliers(
+      @RequestParam(required = false) Long id,
       @RequestParam(required = false) String name,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int perPage) {
-    Page<Supplier> result = service.getSuppliers(name, page, perPage);
+    Page<Supplier> result = service.getSuppliers(id, name, page, perPage);
     return new ApiResponse<>(
         200,
         Map.of(

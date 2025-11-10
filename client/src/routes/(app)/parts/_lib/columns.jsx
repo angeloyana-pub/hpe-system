@@ -13,10 +13,14 @@ import { formatCurrency } from '@/lib/utils';
 export function getColumns({ setRowAction, tags }) {
   return [
     {
+      id: 'id',
       accessorKey: 'id',
       header: 'Part ID',
+      enableColumnFilter: true,
       meta: {
         label: 'Part ID',
+        placeholder: 'Search id...',
+        variant: 'number',
       },
     },
 

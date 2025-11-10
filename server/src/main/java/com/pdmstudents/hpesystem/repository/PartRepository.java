@@ -14,11 +14,15 @@ public interface PartRepository extends JpaRepository<Part, Long> {
       """
     SELECT DISTINCT p FROM Part p
     LEFT JOIN p.tags t
-    WHERE (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')))
+    WHERE (:id IS NULL OR p.id = :id)
+      AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')))
       AND (:tagIds IS NULL OR t.id IN :tagIds)
   """)
   Page<Part> getParts(
-      @Param("name") String name, @Param("tagIds") List<Long> tagIds, Pageable pageable);
+      @Param("id") Long id,
+      @Param("name") String name,
+      @Param("tagIds") List<Long> tagIds,
+      Pageable pageable);
 
   @Modifying
   @Query("UPDATE Part p SET p.stock = p.stock - :stock WHERE p.id = :id")

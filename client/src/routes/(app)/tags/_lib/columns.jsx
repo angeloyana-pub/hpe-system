@@ -11,10 +11,14 @@ import {
 export function getColumns({ setRowAction }) {
   return [
     {
+      id: 'id',
       accessorKey: 'id',
       header: 'Tag ID',
+      enableColumnFilter: true,
       meta: {
         label: 'Tag ID',
+        placeholder: 'Search id...',
+        variant: 'number',
       },
     },
     {

@@ -11,8 +11,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-  @Query("SELECT o FROM Order o")
-  Page<Order> getOrders(Pageable pageable);
+  @Query(
+      """
+    SELECT o FROM Order o
+    WHERE (:id IS NULL OR o.id = :id)
+      AND (:status IS NULL OR o.status IN :status)
+  """)
+  Page<Order> getOrders(
+      @Param("id") Long id, @Param("status") List<String> status, Pageable pageable);
 
   @Query(
       value =

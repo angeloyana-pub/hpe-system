@@ -19,10 +19,11 @@ public class TagController {
 
   @GetMapping
   public ApiResponse<Map<String, Object>> getTags(
+      @RequestParam(required = false) Long id,
       @RequestParam(required = false) String name,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int perPage) {
-    Page<Tag> result = service.getTags(name, page, perPage);
+    Page<Tag> result = service.getTags(id, name, page, perPage);
     return new ApiResponse<>(
         200,
         Map.of(

@@ -5,14 +5,15 @@ import { useAuthenticatedQuery } from '@/hooks/use-authenticated-query';
 import { getAllParts, getParts } from './service';
 
 export function useParts(opts) {
+  const [id] = useQueryState('id', parseAsInteger);
   const [name] = useQueryState('name');
   const [tagIds] = useQueryState('tagIds', parseAsArrayOf(parseAsInteger).withDefault([]));
   const [page] = useQueryState('page', parseAsInteger);
   const [perPage] = useQueryState('perPage', parseAsInteger);
 
   return useAuthenticatedQuery({
-    queryKey: ['parts', { name, page, perPage, tagIds }],
-    queryFn: () => getParts({ name, page, perPage, tagIds }),
+    queryKey: ['parts', { id, name, page, perPage, tagIds }],
+    queryFn: () => getParts({ id, name, page, perPage, tagIds }),
     placeholderData: (prevData) => prevData,
     ...opts,
   });

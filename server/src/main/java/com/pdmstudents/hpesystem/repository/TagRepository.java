@@ -11,7 +11,8 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
   @Query(
       """
     SELECT t FROM Tag t
-    WHERE :name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%'))
+    WHERE (:id IS NULL OR t.id = :id)
+      AND (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))
   """)
-  Page<Tag> getTags(@Param("name") String name, Pageable pageable);
+  Page<Tag> getTags(@Param("id") Long id, @Param("name") String name, Pageable pageable);
 }

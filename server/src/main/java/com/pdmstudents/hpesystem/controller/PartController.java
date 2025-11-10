@@ -19,11 +19,12 @@ public class PartController {
 
   @GetMapping
   public ApiResponse<Map<String, Object>> getParts(
+      @RequestParam(required = false) Long id,
       @RequestParam(required = false) String name,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int perPage,
       @RequestParam(name = "tagIds", required = false) List<Long> tagIds) {
-    Page<Part> result = service.getParts(name, tagIds, page, perPage);
+    Page<Part> result = service.getParts(id, name, tagIds, page, perPage);
     return new ApiResponse<>(
         200,
         Map.of(

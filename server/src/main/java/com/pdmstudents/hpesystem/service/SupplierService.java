@@ -20,9 +20,9 @@ public class SupplierService {
     this.repo = repo;
   }
 
-  public Page<Supplier> getSuppliers(String name, int page, int perPage) {
+  public Page<Supplier> getSuppliers(Long id, String name, int page, int perPage) {
     Pageable pageable = PageRequest.of(page - 1, perPage);
-    return repo.getSuppliers(name, pageable);
+    return repo.getSuppliers(id, name == null || name.isEmpty() ? null : name, pageable);
   }
 
   public List<Supplier> getAllSuppliers() {

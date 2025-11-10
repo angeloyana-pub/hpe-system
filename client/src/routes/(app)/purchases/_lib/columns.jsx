@@ -15,10 +15,14 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 export function getColumns({ setRowAction }) {
   return [
     {
+      id: 'id',
       accessorKey: 'id',
       header: 'Purchase ID',
+      enableColumnFilter: true,
       meta: {
         label: 'Purchase ID',
+        placeholder: 'Search id...',
+        variant: 'number',
       },
     },
     {
@@ -39,6 +43,7 @@ export function getColumns({ setRowAction }) {
       },
     },
     {
+      id: 'status',
       accessorKey: 'status',
       header: 'Status',
       cell: ({ getValue }) => {
@@ -46,6 +51,12 @@ export function getColumns({ setRowAction }) {
         return (
           <Badge variant="outline">{purchaseStatus.find((s) => s.value === status)?.label}</Badge>
         );
+      },
+      enableColumnFilter: true,
+      meta: {
+        label: 'Status',
+        variant: 'multiSelect',
+        options: purchaseStatus,
       },
     },
     {

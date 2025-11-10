@@ -11,9 +11,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
   @Query(
       """
     SELECT c FROM Customer c
-    WHERE (:firstName IS NULL OR LOWER(c.firstName) LIKE LOWER(CONCAT('%', :firstName, '%')))
+    WHERE (:id IS NULL OR c.id = :id)
+      AND (:firstName IS NULL OR LOWER(c.firstName) LIKE LOWER(CONCAT('%', :firstName, '%')))
       AND (:lastName IS NULL OR LOWER(c.lastName) LIKE LOWER(CONCAT('%', :lastName, '%')))
   """)
   Page<Customer> getCustomers(
-      @Param("firstName") String firstName, @Param("lastName") String lastName, Pageable pageable);
+      @Param("id") Long id,
+      @Param("firstName") String firstName,
+      @Param("lastName") String lastName,
+      Pageable pageable);
 }

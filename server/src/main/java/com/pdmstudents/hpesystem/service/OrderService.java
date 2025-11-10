@@ -5,6 +5,7 @@ import com.pdmstudents.hpesystem.model.Order;
 import com.pdmstudents.hpesystem.repository.CustomerRepository;
 import com.pdmstudents.hpesystem.repository.OrderRepository;
 import com.pdmstudents.hpesystem.repository.PartRepository;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,9 +27,9 @@ public class OrderService {
     this.customerRepo = customerRepo;
   }
 
-  public Page<Order> getOrders(int page, int perPage) {
+  public Page<Order> getOrders(Long id, List<String> status, int page, int perPage) {
     Pageable pageable = PageRequest.of(page - 1, perPage);
-    return repo.getOrders(pageable);
+    return repo.getOrders(id, status, pageable);
   }
 
   public Order getOrder(Long id) {

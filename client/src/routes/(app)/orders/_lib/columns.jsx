@@ -16,10 +16,14 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 export function getColumns({ setRowAction }) {
   return [
     {
+      id: 'id',
       accessorKey: 'id',
       header: 'Order ID',
+      enableColumnFilter: true,
       meta: {
         label: 'Order ID',
+        placeholder: 'Search id...',
+        variant: 'number',
       },
     },
     {
@@ -27,6 +31,9 @@ export function getColumns({ setRowAction }) {
       cell: ({ row }) => {
         const { firstName, lastName } = row.original.customer;
         return `${firstName} ${lastName}`;
+      },
+      meta: {
+        label: 'Customer',
       },
     },
     {
@@ -61,6 +68,7 @@ export function getColumns({ setRowAction }) {
       },
     },
     {
+      id: 'status',
       accessorKey: 'status',
       header: 'Status',
       cell: ({ getValue }) => {
@@ -68,6 +76,12 @@ export function getColumns({ setRowAction }) {
         return (
           <Badge variant="outline">{orderStatus.find((s) => s.value === status)?.label}</Badge>
         );
+      },
+      enableColumnFilter: true,
+      meta: {
+        label: 'Status',
+        variant: 'multiSelect',
+        options: orderStatus,
       },
     },
     {

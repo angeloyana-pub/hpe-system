@@ -1,16 +1,18 @@
-import { parseAsInteger, useQueryState } from 'nuqs';
+import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from 'nuqs';
 
 import { useAuthenticatedQuery } from '@/hooks/use-authenticated-query';
 
 import { getPurchase, getPurchases } from './service';
 
 export function usePurchases(opts) {
+  const [id] = useQueryState('id', parseAsInteger);
+  const [status] = useQueryState('status', parseAsArrayOf(parseAsString).withDefault([]));
   const [page] = useQueryState('page', parseAsInteger);
   const [perPage] = useQueryState('perPage', parseAsInteger);
 
   return useAuthenticatedQuery({
-    queryKey: ['purchases', { page, perPage }],
-    queryFn: () => getPurchases({ page, perPage }),
+    queryKey: ['purchases', { id, status, page, perPage }],
+    queryFn: () => getPurchases({ id, status, page, perPage }),
     placeholderData: (prevData) => prevData,
     ...opts,
   });

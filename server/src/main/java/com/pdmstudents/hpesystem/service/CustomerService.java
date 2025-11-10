@@ -20,9 +20,14 @@ public class CustomerService {
     this.repo = repo;
   }
 
-  public Page<Customer> getCustomers(String firstName, String lastName, int page, int perPage) {
+  public Page<Customer> getCustomers(
+      Long id, String firstName, String lastName, int page, int perPage) {
     Pageable pageable = PageRequest.of(page - 1, perPage);
-    return repo.getCustomers(firstName, lastName, pageable);
+    return repo.getCustomers(
+        id,
+        firstName == null || firstName.isEmpty() ? null : firstName,
+        lastName == null || lastName.isEmpty() ? null : lastName,
+        pageable);
   }
 
   public List<Customer> getAllCustomers() {

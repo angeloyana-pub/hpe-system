@@ -19,11 +19,12 @@ public class CustomerController {
 
   @GetMapping
   public ApiResponse<Map<String, Object>> getCustomers(
+      @RequestParam(required = false) Long id,
       @RequestParam(required = false) String firstName,
       @RequestParam(required = false) String lastName,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int perPage) {
-    Page<Customer> result = service.getCustomers(firstName, lastName, page, perPage);
+    Page<Customer> result = service.getCustomers(id, firstName, lastName, page, perPage);
     return new ApiResponse<>(
         200,
         Map.of(

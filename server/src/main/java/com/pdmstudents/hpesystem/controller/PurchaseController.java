@@ -3,6 +3,7 @@ package com.pdmstudents.hpesystem.controller;
 import com.pdmstudents.hpesystem.dto.ApiResponse;
 import com.pdmstudents.hpesystem.model.Purchase;
 import com.pdmstudents.hpesystem.service.PurchaseService;
+import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,11 @@ public class PurchaseController {
 
   @GetMapping
   public ApiResponse<Map<String, Object>> getPurchases(
-      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int perPage) {
-    Page<Purchase> result = service.getPurchases(page, perPage);
+      @RequestParam(required = false) Long id,
+      @RequestParam(required = false) List<String> status,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int perPage) {
+    Page<Purchase> result = service.getPurchases(id, status, page, perPage);
     return new ApiResponse<>(
         200,
         Map.of(

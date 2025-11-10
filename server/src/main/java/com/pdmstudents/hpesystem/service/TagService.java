@@ -20,9 +20,9 @@ public class TagService {
     this.repo = repo;
   }
 
-  public Page<Tag> getTags(String name, int page, int perPage) {
+  public Page<Tag> getTags(Long id, String name, int page, int perPage) {
     Pageable pageable = PageRequest.of(page - 1, perPage);
-    return repo.getTags(name, pageable);
+    return repo.getTags(id, name == null || name.isEmpty() ? null : name, pageable);
   }
 
   public List<Tag> getAllTags() {

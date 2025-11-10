@@ -20,9 +20,10 @@ public class PartService {
     this.repo = repo;
   }
 
-  public Page<Part> getParts(String name, List<Long> tagIds, int page, int perPage) {
+  public Page<Part> getParts(Long id, String name, List<Long> tagIds, int page, int perPage) {
     Pageable pageable = PageRequest.of(page - 1, perPage);
     return repo.getParts(
+        id,
         name == null || name.isEmpty() ? null : name,
         tagIds == null || tagIds.isEmpty() ? null : tagIds,
         pageable);
