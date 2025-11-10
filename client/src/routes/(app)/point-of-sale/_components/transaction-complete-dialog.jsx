@@ -1,6 +1,7 @@
 import { CircleCheck } from 'lucide-react';
+import { Link } from 'react-router';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,37 +10,24 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { orderStatus } from '@/data/order-status';
 import { paymentMethods } from '@/data/payment-methods';
 import { formatCurrency } from '@/lib/utils';
 
 import { useCart } from './cart-context';
 
 export function TransactionCompleteDialog({ transactionInfo, ...props }) {
-  const { paymentAmount = 0, paymentMethod, total = 0 } = transactionInfo || {};
-  const { setCart, clearCart } = useCart();
+  const {
+    id,
+    paymentAmount = 0,
+    paymentMethod,
+    total = 0,
+    status,
+    customer,
+  } = transactionInfo ?? {};
+  const { clearCart } = useCart();
 
   const handleClose = () => {
-    props.onOpenChange?.(false);
-    // Re-calculate part stock for each cart item.
-    setCart((prev) =>
-      prev
-        .map((cartItem) => {
-          const part = {
-            ...cartItem.part,
-            stock: cartItem.part.stock - cartItem.quantity,
-          };
-          if (part.stock <= 0) return null;
-          return {
-            ...cartItem,
-            part,
-            quantity: Math.min(cartItem.quantity, part.stock),
-          };
-        })
-        .filter((cartItem) => cartItem !== null)
-    );
-  };
-
-  const handleClearOrder = () => {
     clearCart();
     props.onOpenChange?.(false);
   };
@@ -52,6 +40,12 @@ export function TransactionCompleteDialog({ transactionInfo, ...props }) {
           <DialogTitle>Transaction Complete</DialogTitle>
         </DialogHeader>
         <div className="grid gap-2">
+          <div className="flex items-center justify-between">
+            <div className="text-muted-foreground">Customer</div>
+            <div className="font-medium">
+              {customer?.firstName} {customer?.lastName}
+            </div>
+          </div>
           <div className="flex items-center justify-between">
             <div className="text-muted-foreground">Payment</div>
             <div className="font-medium">{formatCurrency(paymentAmount)}</div>
@@ -68,6 +62,10 @@ export function TransactionCompleteDialog({ transactionInfo, ...props }) {
                 : undefined) ?? 'N/A'}
             </div>
           </div>
+          <div className="flex items-center justify-between">
+            <div className="text-muted-foreground">Status</div>
+            <div className="font-medium">{orderStatus.find((s) => s.value === status)?.label}</div>
+          </div>
           <Separator className="my-2" />
           <div className="flex items-center justify-between">
             <div className="text-muted-foreground">Total</div>
@@ -78,9 +76,9 @@ export function TransactionCompleteDialog({ transactionInfo, ...props }) {
           <Button variant="outline" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="outline" onClick={handleClearOrder}>
-            Clear Order
-          </Button>
+          <Link to={`/orders?id=${id}`} className={buttonVariants({ variant: 'outline' })}>
+            View Order
+          </Link>
         </DialogFooter>
       </DialogContent>
     </Dialog>

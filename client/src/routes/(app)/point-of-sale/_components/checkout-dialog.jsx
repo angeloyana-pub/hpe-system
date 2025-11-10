@@ -66,7 +66,7 @@ export function CheckoutDialog(props) {
     }
 
     startSubmitTransition(async () => {
-      await addOrder.mutate({
+      const order = await addOrder.mutateAsync({
         ...data,
         customer: { id: data.customer },
         orderItems: cart.map((cartItem) => ({
@@ -75,10 +75,7 @@ export function CheckoutDialog(props) {
           part: { id: cartItem.part.id },
         })),
       });
-      setTransactionInfo({
-        ...data,
-        total,
-      });
+      setTransactionInfo(order);
       props.onOpenChange?.(false);
       form.reset();
     });
