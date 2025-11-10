@@ -123,12 +123,9 @@ public class PurchaseService {
     repo.findById(id)
         .ifPresentOrElse(
             purchase -> {
-              purchase
-                  .getPurchaseItems()
-                  .forEach(
-                      (item) -> {
-                        partRepo.decreaseStock(item.getPart().getId(), item.getQuantity());
-                      });
+              if (purchase.getStatus() == PurchaseStatus.COMPLETED) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+              }
               repo.delete(purchase);
             },
             () -> {

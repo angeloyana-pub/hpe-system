@@ -78,10 +78,6 @@ export function getColumns({ setRowAction }) {
           setRowAction({ row, variant: 'viewPurchaseItems' });
         };
 
-        const handleDelete = () => {
-          setRowAction({ row, variant: 'delete' });
-        };
-
         return (
           <div className="flex justify-end">
             <DropdownMenu>
@@ -95,11 +91,15 @@ export function getColumns({ setRowAction }) {
                   View Purchase Items
                 </DropdownMenuItem>
                 {row.original.status != 'COMPLETED' && (
-                  <DropdownMenuItem asChild>
-                    <Link to={`/purchases/update/${row.original.id}`}>Edit</Link>
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to={`/purchases/update/${row.original.id}`}>Edit</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setRowAction({ row, variant: 'delete' })}>
+                      Delete
+                    </DropdownMenuItem>
+                  </>
                 )}
-                <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

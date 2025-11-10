@@ -135,13 +135,9 @@ public class OrderService {
     repo.findById(id)
         .ifPresentOrElse(
             order -> {
-              order
-                  .getOrderItems()
-                  .forEach(
-                      item -> {
-                        var part = item.getPart();
-                        part.setStock(part.getStock() + item.getQuantity());
-                      });
+              if (order.getStatus() == OrderStatus.COMPLETED) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+              }
               repo.delete(order);
             },
             () -> {
