@@ -61,4 +61,20 @@ public class TagService {
       }
     }
   }
+
+  public void deleteTags(List<Long> ids) {
+    try {
+      List<Long> existingIds = repo.findAllById(ids).stream().map(Tag::getId).toList();
+      if (ids.stream().anyMatch(id -> !existingIds.contains(id))) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+      }
+      repo.deleteAllById(ids);
+    } catch (DataIntegrityViolationException ex) {
+      if (ex.getRootCause() instanceof SQLIntegrityConstraintViolationException) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT);
+      } else {
+        throw ex;
+      }
+    }
+  }
 }

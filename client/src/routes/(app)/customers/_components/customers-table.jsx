@@ -3,6 +3,7 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { useDataTable } from '@/hooks/use-data-table';
 
 import { AddCustomerDialog } from './add-customer-dialog';
+import { CustomersTableActionBar } from './customers-table-action-bar';
 
 export function CustomersTable({ data, columns }) {
   const { customers, pageCount } = data;
@@ -14,7 +15,7 @@ export function CustomersTable({ data, columns }) {
   });
 
   return (
-    <DataTable table={table}>
+    <DataTable table={table} actionBar={<CustomersTableActionBar table={table} />}>
       <DataTableToolbar table={table}>
         <AddCustomerDialog />
       </DataTableToolbar>

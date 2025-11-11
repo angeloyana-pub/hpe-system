@@ -3,6 +3,7 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { useDataTable } from '@/hooks/use-data-table';
 
 import { AddSupplierDialog } from './add-supplier-dialog';
+import { SuppliersTableActionBar } from './suppliers-table-action-bar';
 
 export function SuppliersTable({ data, columns }) {
   const { suppliers, pageCount } = data;
@@ -14,7 +15,7 @@ export function SuppliersTable({ data, columns }) {
   });
 
   return (
-    <DataTable table={table}>
+    <DataTable table={table} actionBar={<SuppliersTableActionBar table={table} />}>
       <DataTableToolbar table={table}>
         <AddSupplierDialog />
       </DataTableToolbar>

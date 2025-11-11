@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useAuthenticatedMutation } from '@/hooks/use-authenticated-mutation';
 
-import { addPart, deletePart, updatePart } from './service';
+import { addPart, deletePart, deleteParts, updatePart } from './service';
 
 export function useAddPart(opts) {
   const queryClient = useQueryClient();
@@ -33,6 +33,18 @@ export function useDeletePart(opts) {
 
   return useAuthenticatedMutation({
     mutationFn: (id) => deletePart(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['parts']);
+    },
+    ...opts,
+  });
+}
+
+export function useDeleteParts(opts) {
+  const queryClient = useQueryClient();
+
+  return useAuthenticatedMutation({
+    mutationFn: (ids) => deleteParts(ids),
     onSuccess: () => {
       queryClient.invalidateQueries(['parts']);
     },

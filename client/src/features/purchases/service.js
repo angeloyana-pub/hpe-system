@@ -24,3 +24,8 @@ export async function deletePurchase(id) {
   const res = await client.delete(`/purchases/${id}`);
   return res.data.data;
 }
+
+export async function deletePurchases(ids) {
+  const res = await client.delete('/purchases', { params: { ids } });
+  return res.data.data;
+}

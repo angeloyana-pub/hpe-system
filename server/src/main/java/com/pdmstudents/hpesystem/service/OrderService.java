@@ -130,7 +130,6 @@ public class OrderService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
   }
 
-  @Transactional(rollbackFor = Exception.class)
   public void deleteOrder(Long id) {
     repo.findById(id)
         .ifPresentOrElse(
@@ -143,5 +142,19 @@ public class OrderService {
             () -> {
               throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             });
+  }
+
+  public void deleteOrders(List<Long> ids) {
+    List<Order> orders = repo.findAllById(ids);
+    if (orders.stream().anyMatch(purchase -> purchase.getStatus() == OrderStatus.COMPLETED)) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    }
+
+    List<Long> orderIds = orders.stream().map(Order::getId).toList();
+    if (ids.stream().anyMatch(id -> !orderIds.contains(id))) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    repo.deleteAllById(ids);
   }
 }

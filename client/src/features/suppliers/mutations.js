@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useAuthenticatedMutation } from '@/hooks/use-authenticated-mutation';
 
-import { addSupplier, deleteSupplier, updateSupplier } from './service';
+import { addSupplier, deleteSupplier, deleteSuppliers, updateSupplier } from './service';
 
 export function useAddSupplier(opts) {
   const queryClient = useQueryClient();
@@ -33,6 +33,18 @@ export function useDeleteSupplier(opts) {
 
   return useAuthenticatedMutation({
     mutationFn: (id) => deleteSupplier(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['suppliers']);
+    },
+    ...opts,
+  });
+}
+
+export function useDeleteSuppliers(opts) {
+  const queryClient = useQueryClient();
+
+  return useAuthenticatedMutation({
+    mutationFn: (ids) => deleteSuppliers(ids),
     onSuccess: () => {
       queryClient.invalidateQueries(['suppliers']);
     },

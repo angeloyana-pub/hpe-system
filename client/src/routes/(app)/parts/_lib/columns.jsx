@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 
 import { badgeVariants } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +14,31 @@ import { formatCurrency } from '@/lib/utils';
 
 export function getColumns({ setRowAction, tags }) {
   return [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="select all"
+          className="translate-y-0.5"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="select row"
+          className="translate-y-0.5"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 40,
+    },
     {
       id: 'id',
       accessorKey: 'id',

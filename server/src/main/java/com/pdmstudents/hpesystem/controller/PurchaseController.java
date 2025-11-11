@@ -55,4 +55,10 @@ public class PurchaseController {
     service.deletePurchase(id);
     return new ApiResponse<>(200, null);
   }
+
+  @DeleteMapping
+  public ApiResponse<Object> deletePurchases(@RequestParam List<Long> ids) {
+    service.deletePurchases(ids);
+    return new ApiResponse<>(200, null);
+  }
 }

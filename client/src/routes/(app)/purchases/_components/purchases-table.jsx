@@ -6,6 +6,8 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { buttonVariants } from '@/components/ui/button';
 import { useDataTable } from '@/hooks/use-data-table';
 
+import { PurchasesTableActionBar } from './purchases-table-action-bar';
+
 export function PurchasesTable({ data, columns }) {
   const { purchases, pageCount } = data;
   const { table } = useDataTable({
@@ -16,7 +18,7 @@ export function PurchasesTable({ data, columns }) {
   });
 
   return (
-    <DataTable table={table}>
+    <DataTable table={table} actionBar={<PurchasesTableActionBar table={table} />}>
       <DataTableToolbar table={table}>
         <Link to="/purchases/add" className={buttonVariants()}>
           <Plus />

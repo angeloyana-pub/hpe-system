@@ -55,4 +55,10 @@ public class PartController {
     service.deletePart(id);
     return new ApiResponse<>(200, null);
   }
+
+  @DeleteMapping
+  public ApiResponse<Object> deleteParts(@RequestParam List<Long> ids) {
+    service.deleteParts(ids);
+    return new ApiResponse<>(200, null);
+  }
 }

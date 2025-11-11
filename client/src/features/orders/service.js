@@ -24,3 +24,8 @@ export async function deleteOrder(id) {
   const res = await client.delete(`/orders/${id}`);
   return res.data.data;
 }
+
+export async function deleteOrders(ids) {
+  const res = await client.delete('/orders', { params: { ids } });
+  return res.data.data;
+}

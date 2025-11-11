@@ -56,4 +56,10 @@ public class CustomerController {
     service.deleteCustomer(id);
     return new ApiResponse<>(200, null);
   }
+
+  @DeleteMapping
+  public ApiResponse<Object> deleteCustomers(@RequestParam List<Long> ids) {
+    service.deleteCustomers(ids);
+    return new ApiResponse<>(200, null);
+  }
 }

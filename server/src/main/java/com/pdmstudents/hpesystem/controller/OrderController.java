@@ -54,4 +54,10 @@ public class OrderController {
     service.deleteOrder(id);
     return new ApiResponse<>(200, null);
   }
+
+  @DeleteMapping
+  public ApiResponse<Object> deleteOrders(@RequestParam List<Long> ids) {
+    service.deleteOrders(ids);
+    return new ApiResponse<>(200, null);
+  }
 }

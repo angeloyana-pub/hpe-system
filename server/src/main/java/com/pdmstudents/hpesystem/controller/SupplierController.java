@@ -55,4 +55,10 @@ public class SupplierController {
     service.deleteSupplier(id);
     return new ApiResponse<>(200, null);
   }
+
+  @DeleteMapping
+  public ApiResponse<Object> deleteSuppliers(@RequestParam List<Long> ids) {
+    service.deleteSuppliers(ids);
+    return new ApiResponse<>(200, null);
+  }
 }

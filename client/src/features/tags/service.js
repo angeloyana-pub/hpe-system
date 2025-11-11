@@ -24,3 +24,8 @@ export async function deleteTag(id) {
   const res = await client.delete(`/tags/${id}`);
   return res.data.data;
 }
+
+export async function deleteTags(ids) {
+  const res = await client.delete('/tags', { params: { ids } });
+  return res.data.data;
+}

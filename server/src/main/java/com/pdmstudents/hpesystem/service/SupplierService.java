@@ -70,4 +70,20 @@ public class SupplierService {
       }
     }
   }
+
+  public void deleteSuppliers(List<Long> ids) {
+    try {
+      List<Long> existingIds = repo.findAllById(ids).stream().map(Supplier::getId).toList();
+      if (ids.stream().anyMatch(id -> !existingIds.contains(id))) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+      }
+      repo.deleteAllById(ids);
+    } catch (DataIntegrityViolationException ex) {
+      if (ex.getRootCause() instanceof SQLIntegrityConstraintViolationException) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT);
+      } else {
+        throw ex;
+      }
+    }
+  }
 }

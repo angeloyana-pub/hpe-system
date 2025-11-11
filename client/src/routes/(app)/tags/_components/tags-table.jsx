@@ -3,6 +3,7 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { useDataTable } from '@/hooks/use-data-table';
 
 import { AddTagDialog } from './add-tag-dialog';
+import { TagsTableActionBar } from './tags-table-action-bar';
 
 export function TagsTable({ data, columns }) {
   const { tags, pageCount } = data;
@@ -14,7 +15,7 @@ export function TagsTable({ data, columns }) {
   });
 
   return (
-    <DataTable table={table}>
+    <DataTable table={table} actionBar={<TagsTableActionBar table={table} />}>
       <DataTableToolbar table={table}>
         <AddTagDialog />
       </DataTableToolbar>

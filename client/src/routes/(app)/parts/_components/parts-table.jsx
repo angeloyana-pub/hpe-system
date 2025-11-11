@@ -3,6 +3,7 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { useDataTable } from '@/hooks/use-data-table';
 
 import { AddPartDialog } from './add-part-dialog';
+import { PartsTableActionBar } from './parts-table-action-bar';
 
 export function PartsTable({ data, columns }) {
   const { parts, pageCount } = data;
@@ -14,7 +15,7 @@ export function PartsTable({ data, columns }) {
   });
 
   return (
-    <DataTable table={table}>
+    <DataTable table={table} actionBar={<PartsTableActionBar table={table} />}>
       <DataTableToolbar table={table}>
         <AddPartDialog />
       </DataTableToolbar>

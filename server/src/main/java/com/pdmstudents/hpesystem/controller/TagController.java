@@ -54,4 +54,10 @@ public class TagController {
     service.deleteTag(id);
     return new ApiResponse<>(200, null);
   }
+
+  @DeleteMapping
+  public ApiResponse<Object> deleteTags(@RequestParam List<Long> ids) {
+    service.deleteTags(ids);
+    return new ApiResponse<>(200, null);
+  }
 }

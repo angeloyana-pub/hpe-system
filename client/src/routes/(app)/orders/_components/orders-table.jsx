@@ -6,6 +6,8 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { buttonVariants } from '@/components/ui/button';
 import { useDataTable } from '@/hooks/use-data-table';
 
+import { OrdersTableActionBar } from './orders-table-action-bar';
+
 export function OrdersTable({ data, columns }) {
   const { orders, pageCount } = data;
   const { table } = useDataTable({
@@ -16,7 +18,7 @@ export function OrdersTable({ data, columns }) {
   });
 
   return (
-    <DataTable table={table}>
+    <DataTable table={table} actionBar={<OrdersTableActionBar table={table} />}>
       <DataTableToolbar table={table}>
         <Link to="/point-of-sale" className={buttonVariants({ variant: 'outline' })}>
           <Calculator />
