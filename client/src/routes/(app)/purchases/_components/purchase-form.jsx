@@ -222,7 +222,7 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
           )}
         />
       </Form>
-      <Button type="submit" disabled={isSubmitPending}>
+      <Button type="submit" disabled={isSubmitPending || !form.formState.isDirty}>
         {isSubmitPending ? <Loader className="animate-spin" /> : <Plus />}
         {variant === 'add' ? 'Add' : 'Update'} Purchase
       </Button>

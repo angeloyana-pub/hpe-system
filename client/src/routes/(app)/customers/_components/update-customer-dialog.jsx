@@ -125,7 +125,7 @@ export function UpdateCustomerDialog({ customer, ...props }) {
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={isUpdatePending}>
+              <Button type="submit" disabled={isUpdatePending || !form.formState.isDirty}>
                 {isUpdatePending && <Loader aria-hidden="true" className="animate-spin" />}
                 Update
               </Button>

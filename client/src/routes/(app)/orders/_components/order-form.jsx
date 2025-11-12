@@ -285,7 +285,7 @@ export function OrderForm({ variant, defaultValues, onSubmit }) {
           )}
         />
       </Form>
-      <Button type="submit" disabled={isSubmitPending}>
+      <Button type="submit" disabled={isSubmitPending || !form.formState.isDirty}>
         {isSubmitPending ? <Loader className="animate-spin" /> : <Plus />}
         {variant === 'add' ? 'Add' : 'Update'} Order
       </Button>
