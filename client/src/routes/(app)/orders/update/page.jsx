@@ -38,7 +38,7 @@ function UpdateOrder() {
   });
   const updateOrder = useUpdateOrder();
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (_, data) => {
     try {
       await updateOrder.mutateAsync({
         id,
@@ -60,6 +60,8 @@ function UpdateOrder() {
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 409) {
         toast.error('Unable to proceed. This change would reduce stock below zero.');
+      } else {
+        throw err;
       }
     }
   };

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
@@ -11,21 +12,30 @@ function AddOrder() {
   const navigate = useNavigate();
   const addOrder = useAddOrder();
 
-  const handleSubmit = async (data) => {
-    const { id } = await addOrder.mutateAsync({
-      ...data,
-      customer: { id: data.customer },
-      orderItems: data.orderItems.map((item) => ({
-        ...item,
-        part: { id: item.part.id },
-      })),
-    });
-    toast.success('Order has been added', {
-      action: {
-        label: 'View',
-        onClick: () => navigate(`/orders?id=${id}`),
-      },
-    });
+  const handleSubmit = async (form, data) => {
+    try {
+      const { id } = await addOrder.mutateAsync({
+        ...data,
+        customer: { id: data.customer },
+        orderItems: data.orderItems.map((item) => ({
+          ...item,
+          part: { id: item.part.id },
+        })),
+      });
+      toast.success('Order has been added', {
+        action: {
+          label: 'View',
+          onClick: () => navigate(`/orders?id=${id}`),
+        },
+      });
+      form.reset();
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status == 409) {
+        toast.error('Unable to proceed. This action would reduce stock below zero.');
+      } else {
+        throw err;
+      }
+    }
   };
 
   return (

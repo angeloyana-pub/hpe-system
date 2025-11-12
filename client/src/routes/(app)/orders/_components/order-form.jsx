@@ -3,7 +3,9 @@ import { Loader, PhilippinePeso, Plus, X } from 'lucide-react';
 import { useTransition } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 
+import { PartPickerDialog } from '@/components/custom/part-picker-dialog';
 import { Button } from '@/components/ui/button';
+import { DialogTrigger } from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -27,7 +29,6 @@ import { useAllCustomers } from '@/features/customers/queries';
 import { formatCurrency } from '@/lib/utils';
 
 import { addOrderSchema, updateOrderSchema } from '../_lib/validators';
-import { PartPickerDialog } from './part-picker-dialog';
 
 export function OrderForm({ variant, defaultValues, onSubmit }) {
   const { data: customers = [] } = useAllCustomers();
@@ -39,6 +40,7 @@ export function OrderForm({ variant, defaultValues, onSubmit }) {
       status: 'PROCESSING',
       orderItems: [],
     },
+    // resetOptions: { keepDirtyValues: true }
   });
   const orderItemsField = useFieldArray({
     name: 'orderItems',
@@ -59,6 +61,15 @@ export function OrderForm({ variant, defaultValues, onSubmit }) {
     }
   };
 
+  const handleAddOrderItems = (parts) => {
+    const items = form.getValues('orderItems');
+    const itemPartIds = new Set(items.map((item) => item.part.id));
+    const filteredItems = parts
+      .filter((part) => !itemPartIds.has(part.id) && part.stock > 0)
+      .map((part) => ({ quantity: 1, price: part.price, part }));
+    orderItemsField.append(filteredItems);
+  };
+
   const handleSubmit = (data) => {
     const total = data.orderItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
     if (data.paymentAmount < total) {
@@ -70,8 +81,7 @@ export function OrderForm({ variant, defaultValues, onSubmit }) {
     }
 
     startSubmitTransition(async () => {
-      await onSubmit(data);
-      form.reset();
+      await onSubmit(form, data);
     });
   };
 
@@ -260,7 +270,16 @@ export function OrderForm({ variant, defaultValues, onSubmit }) {
                   </div>
                 ))}
               </div>
-              <PartPickerDialog onPick={handleAddOrderItem} />
+              <PartPickerDialog onPick={handleAddOrderItem} onPickMany={handleAddOrderItems}>
+                <FormControl>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="border-dashed">
+                      <Plus />
+                      Add Items
+                    </Button>
+                  </DialogTrigger>
+                </FormControl>
+              </PartPickerDialog>
               <FormMessage />
             </FormItem>
           )}

@@ -16,7 +16,9 @@ export function CartProvider({ children }) {
   );
 
   const addToCart = (part) => {
-    setCart((prev) => [...prev, { id: part.id, part, quantity: 1 }]);
+    if (part.stock > 0 && !cart.some((item) => item.id === part.id)) {
+      setCart((prev) => [...prev, { id: part.id, part, quantity: 1 }]);
+    }
   };
 
   const getCartItem = (cartItemId) => {

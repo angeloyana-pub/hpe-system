@@ -3,7 +3,9 @@ import { Loader, PhilippinePeso, Plus, X } from 'lucide-react';
 import { useTransition } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 
+import { PartPickerDialog } from '@/components/custom/part-picker-dialog';
 import { Button } from '@/components/ui/button';
+import { DialogTrigger } from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -25,7 +27,6 @@ import { purchaseStatus } from '@/data/purchase-status';
 import { useAllSuppliers } from '@/features/suppliers/queries';
 
 import { addPurchaseSchema, updatePurchaseSchema } from '../_lib/validators';
-import { PartPickerDialog } from './part-picker-dialog';
 
 export function PurchaseForm({ variant, defaultValues, onSubmit }) {
   const { data: suppliers = [] } = useAllSuppliers();
@@ -57,10 +58,18 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
     }
   };
 
+  const handleAddPurchaseItems = (parts) => {
+    const items = form.getValues('purchaseItems');
+    const itemPartIds = new Set(items.map((item) => item.part.id));
+    const filteredItems = parts
+      .filter((part) => !itemPartIds.has(part.id))
+      .map((part) => ({ quantity: 1, price: part.price, part }));
+    purchaseItemsField.append(filteredItems);
+  };
+
   const handleSubmit = (data) => {
     startSubmitTransition(async () => {
-      await onSubmit(data);
-      form.reset();
+      await onSubmit(form, data);
     });
   };
 
@@ -198,7 +207,16 @@ export function PurchaseForm({ variant, defaultValues, onSubmit }) {
                   </div>
                 ))}
               </div>
-              <PartPickerDialog onPick={handleAddPurchaseItem} />
+              <PartPickerDialog onPick={handleAddPurchaseItem} onPickMany={handleAddPurchaseItems}>
+                <FormControl>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="border-dashed">
+                      <Plus />
+                      Add Items
+                    </Button>
+                  </DialogTrigger>
+                </FormControl>
+              </PartPickerDialog>
               <FormMessage />
             </FormItem>
           )}

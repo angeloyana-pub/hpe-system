@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, ShoppingCart, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Grid2x2Plus, ShoppingCart, X } from 'lucide-react';
 import { parseAsArrayOf, parseAsInteger, useQueryState } from 'nuqs';
 
 import { NumberInput } from '@/components/custom/number-input';
@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useParts } from '@/features/parts/queries';
 import { useAllTags } from '@/features/tags/queries';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
@@ -50,6 +51,10 @@ export function PartsList() {
     setPage(1);
   }, 300);
 
+  const handleAddAll = () => {
+    parts.forEach((part) => addToCart(part));
+  };
+
   const handlePreviousPage = () => {
     setPage((prev) => prev - 1);
   };
@@ -74,7 +79,7 @@ export function PartsList() {
             setPage(1);
           }}
         >
-          <MultiSelectTrigger className="min-h-8 h-8 mr-auto">
+          <MultiSelectTrigger className="min-h-8 h-8">
             <MultiSelectValue placeholder="Tags" />
           </MultiSelectTrigger>
           <MultiSelectContent>
@@ -87,6 +92,23 @@ export function PartsList() {
             </MultiSelectGroup>
           </MultiSelectContent>
         </MultiSelect>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                aria-label="add all to cart"
+                size="sm"
+                onClick={handleAddAll}
+                className="mr-auto"
+              >
+                <Grid2x2Plus />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Add all to cart</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <ButtonGroup>
           <ButtonGroup>
             <Select

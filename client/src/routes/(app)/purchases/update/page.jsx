@@ -38,7 +38,7 @@ function UpdatePurchase() {
   });
   const updatePurchase = useUpdatePurchase();
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (_, data) => {
     await updatePurchase.mutateAsync({
       id,
       updatedPurchase: {

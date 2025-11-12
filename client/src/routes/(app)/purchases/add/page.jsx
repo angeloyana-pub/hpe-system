@@ -11,7 +11,7 @@ function AddPurchase() {
   const navigate = useNavigate();
   const addPurchase = useAddPurchase();
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (form, data) => {
     const { id } = await addPurchase.mutateAsync({
       ...data,
       supplier: { id: data.supplier },
@@ -26,6 +26,7 @@ function AddPurchase() {
         onClick: () => navigate(`/purchases?id=${id}`),
       },
     });
+    form.reset();
   };
 
   return (

@@ -4,12 +4,16 @@ import { useAuthenticatedQuery } from '@/hooks/use-authenticated-query';
 
 import { getAllParts, getParts } from './service';
 
-export function useParts(opts) {
-  const [id] = useQueryState('id', parseAsInteger);
-  const [name] = useQueryState('name');
-  const [tagIds] = useQueryState('tagIds', parseAsArrayOf(parseAsInteger).withDefault([]));
-  const [page] = useQueryState('page', parseAsInteger);
-  const [perPage] = useQueryState('perPage', parseAsInteger);
+export function useParts(props) {
+  const { queryKeys, ...opts } = props ?? {};
+  const [id] = useQueryState(queryKeys?.id ?? 'id', parseAsInteger);
+  const [name] = useQueryState(queryKeys?.name ?? 'name');
+  const [tagIds] = useQueryState(
+    queryKeys?.tagIds ?? 'tagIds',
+    parseAsArrayOf(parseAsInteger).withDefault([])
+  );
+  const [page] = useQueryState(queryKeys?.page ?? 'page', parseAsInteger);
+  const [perPage] = useQueryState(queryKeys?.perPage ?? 'perPage', parseAsInteger);
 
   return useAuthenticatedQuery({
     queryKey: ['parts', { id, name, page, perPage, tagIds }],
