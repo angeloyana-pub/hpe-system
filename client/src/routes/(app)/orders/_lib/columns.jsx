@@ -1,5 +1,8 @@
+import axios from 'axios';
 import { MoreHorizontal } from 'lucide-react';
+import { useTransition } from 'react';
 import { Link } from 'react-router';
+import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -8,13 +11,19 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { orderStatus } from '@/data/order-status';
 import { paymentMethods } from '@/data/payment-methods';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
-export function getColumns({ setRowAction }) {
+export function getColumns({ updateOrder, setRowAction }) {
   return [
     {
       id: 'select',
@@ -104,8 +113,12 @@ export function getColumns({ setRowAction }) {
       header: 'Status',
       cell: ({ getValue }) => {
         const status = getValue();
+        const statusInfo = orderStatus.find((s) => s.value === status);
         return (
-          <Badge variant="outline">{orderStatus.find((s) => s.value === status)?.label}</Badge>
+          <Badge variant="outline" className="rounded-md">
+            {statusInfo?.icon && <statusInfo.icon />}
+            {statusInfo?.label}
+          </Badge>
         );
       },
       enableColumnFilter: true,
@@ -137,6 +150,8 @@ export function getColumns({ setRowAction }) {
     {
       id: 'actions',
       cell: ({ row }) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [isUpdatePending, startUpdateTransition] = useTransition();
         const handleViewOrderItems = () => {
           setRowAction({ row, variant: 'viewOrderItems' });
         };
@@ -156,6 +171,44 @@ export function getColumns({ setRowAction }) {
                     <DropdownMenuItem asChild>
                       <Link to={`/orders/update/${row.original.id}`}>Edit</Link>
                     </DropdownMenuItem>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuRadioGroup
+                          value={row.original.status}
+                          onValueChange={(val) => {
+                            startUpdateTransition(async () => {
+                              try {
+                                await updateOrder.mutateAsync({
+                                  id: row.original.id,
+                                  updatedOrder: { status: val },
+                                });
+                                toast.success('Status has been updated');
+                              } catch (err) {
+                                if (axios.isAxiosError(err) && err.response?.status === 409) {
+                                  toast.error(
+                                    'Unable to proceed. This change would reduce stock below zero.'
+                                  );
+                                } else {
+                                  throw err;
+                                }
+                              }
+                            });
+                          }}
+                        >
+                          {orderStatus.map((status) => (
+                            <DropdownMenuRadioItem
+                              key={status.value}
+                              value={status.value}
+                              disabled={isUpdatePending}
+                            >
+                              {status.label}
+                            </DropdownMenuRadioItem>
+                          ))}
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setRowAction({ row, variant: 'delete' })}>
                       Delete
                     </DropdownMenuItem>

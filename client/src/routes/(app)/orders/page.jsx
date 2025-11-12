@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { useUpdateOrder } from '@/features/orders/mutations';
 import { useOrders } from '@/features/orders/queries';
 
 import { DeleteOrderDialog } from './_components/delete-order-dialog';
@@ -11,9 +12,10 @@ import { getColumns } from './_lib/columns';
 
 function Orders() {
   const { data = { orders: [], pageCount: 0 } } = useOrders();
+  const updateOrder = useUpdateOrder();
 
   const [rowAction, setRowAction] = useState(null);
-  const columns = useMemo(() => getColumns({ setRowAction }), []);
+  const columns = useMemo(() => getColumns({ updateOrder, setRowAction }), []);
 
   return (
     <SidebarInset>

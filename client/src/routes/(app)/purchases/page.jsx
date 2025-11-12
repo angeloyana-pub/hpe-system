@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { useUpdatePurchase } from '@/features/purchases/mutations';
 import { usePurchases } from '@/features/purchases/queries';
 
 import { DeletePurchaseDialog } from './_components/delete-purchase-dialog';
@@ -11,9 +12,10 @@ import { getColumns } from './_lib/columns';
 
 function Purchases() {
   const { data = { purchases: [], pageCount: 0 } } = usePurchases();
+  const updatePurchase = useUpdatePurchase();
 
   const [rowAction, setRowAction] = useState(null);
-  const columns = useMemo(() => getColumns({ setRowAction }), []);
+  const columns = useMemo(() => getColumns({ updatePurchase, setRowAction }), []);
 
   return (
     <SidebarInset>
