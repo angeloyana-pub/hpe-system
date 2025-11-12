@@ -23,6 +23,7 @@ public class Purchase {
   private Long id;
 
   private LocalDateTime createdAt;
+  private LocalDateTime completedAt;
 
   @Enumerated(EnumType.STRING)
   private PurchaseStatus status;
@@ -39,7 +40,19 @@ public class Purchase {
 
   @PrePersist
   protected void onCreate() {
-    createdAt = LocalDateTime.now();
+    if (createdAt == null) {
+      createdAt = LocalDateTime.now();
+    }
+    if (status == PurchaseStatus.COMPLETED) {
+      completedAt = LocalDateTime.now();
+    }
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    if (status == PurchaseStatus.COMPLETED && completedAt == null) {
+      completedAt = LocalDateTime.now();
+    }
   }
 
   public BigDecimal getTotal() {

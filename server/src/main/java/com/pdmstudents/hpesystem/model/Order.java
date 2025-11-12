@@ -27,6 +27,7 @@ public class Order {
 
   private String paymentMethod;
   private LocalDateTime createdAt;
+  private LocalDateTime completedAt;
 
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
@@ -45,6 +46,16 @@ public class Order {
   protected void onCreate() {
     if (createdAt == null) {
       createdAt = LocalDateTime.now();
+    }
+    if (status == OrderStatus.COMPLETED) {
+      completedAt = LocalDateTime.now();
+    }
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    if (status == OrderStatus.COMPLETED && completedAt == null) {
+      completedAt = LocalDateTime.now();
     }
   }
 

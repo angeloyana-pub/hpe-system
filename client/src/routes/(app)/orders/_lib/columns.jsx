@@ -124,6 +124,17 @@ export function getColumns({ setRowAction }) {
       },
     },
     {
+      accessorKey: 'completedAt',
+      header: 'Completed At',
+      cell: ({ getValue }) => {
+        const value = getValue();
+        return value ? formatDate(value) : <div className="text-muted-foreground italic">N/A</div>;
+      },
+      meta: {
+        label: 'Completed At',
+      },
+    },
+    {
       id: 'actions',
       cell: ({ row }) => {
         const handleViewOrderItems = () => {
